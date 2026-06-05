@@ -13,14 +13,7 @@ namespace GUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // 1. Khởi tạo View
-            var view = new frmTestConnection();
-
-            // 2. Khởi tạo Presenter và truyền View vào
-            var presenter = new TestConnectionPresenter(view);
-
-            // 3. Chạy ứng dụng
-            Application.Run(view);
+            Application.Run(new frmLogin());
         }
     }
 }

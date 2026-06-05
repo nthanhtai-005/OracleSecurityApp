@@ -8,5 +8,24 @@ namespace GUI.Interfaces
 {
     public interface IMainView
     {
+        // THÊM MỚI 1: Các sự kiện báo cáo có người click nút
+        event EventHandler OpenUserClicked;
+        event EventHandler OpenRoleClicked;
+        event EventHandler OpenProfileClicked;
+        event EventHandler OpenGrantClicked;
+        event EventHandler OpenDemoClicked;
+        void SetUserMenuVisible(bool isVisible);
+        void SetRoleMenuVisible(bool isVisible);
+        void SetProfileMenuVisible(bool isVisible);
+        void SetGrantMenuVisible(bool isVisible);
+
+        // Nút DemoTable có thể luôn hiện, hoặc ẩn tùy logic nhóm
+        void SetDemoTableMenuVisible(bool isVisible);
+        // THÊM MỚI 2: Các lệnh yêu cầu Form mở cửa sổ
+        void ShowUserForm();
+        void ShowRoleForm();
+        void ShowProfileForm();
+        void ShowGrantForm();
+        void ShowDemoForm();
     }
 }

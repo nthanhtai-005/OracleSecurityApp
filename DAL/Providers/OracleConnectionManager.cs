@@ -10,11 +10,20 @@ namespace DAL.Providers
     public class OracleConnectionManager
     {
         // Chuỗi kết nối
-        private readonly string _connectionString = "User Id=sys; Password=nthanhtai; Data Source=localhost:1521/FREEPDB1; DBA Privilege=SYSDBA;";
+        /*private readonly string _connectionString = "User Id=sys; Password=nthanhtai; Data Source=localhost:1521/FREEPDB1; DBA Privilege=SYSDBA;";
 
         public OracleConnection GetConnection()
         {
             return new OracleConnection(_connectionString);
+        }*/
+
+        // Biến static để lưu chuỗi kết nối dùng chung cho toàn phiên làm việc để test
+        // Lưu ý: mọi người đổi chuổi kết nối từ phần datasourcce thôi 
+        public static string CurrentConnectionString { get; set; } = "Data Source=localhost:1521/FREEPDB1;";
+
+        public OracleConnection GetConnection()
+        {
+            return new OracleConnection(CurrentConnectionString);
         }
     }
 }
