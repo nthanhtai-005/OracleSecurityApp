@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DAL.Providers;
-using Oracle.ManagedDataAccess.Client;
-using System.Data;
+using DAL.Repositories;
 
-namespace DAL.Repositories
+namespace BLL.Services
 {
-    public class AuthRepo
+    internal class DemoTableService
     {
     }
 }

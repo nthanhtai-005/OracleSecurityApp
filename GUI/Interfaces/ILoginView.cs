@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GUI.Interfaces
 {
-    internal class ILoginView
+    public interface ILoginView
     {
     }
 }

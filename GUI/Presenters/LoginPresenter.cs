@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GUI.Interfaces;
+using BLL.Services;
 
 namespace GUI.Presenters
 {
-    internal class LoginPresenter
+    public class LoginPresenter
     {
     }
 }
