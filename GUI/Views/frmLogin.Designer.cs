@@ -34,9 +34,12 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             txtUsername = new Guna.UI2.WinForms.Guna2TextBox();
             txtPassword = new Guna.UI2.WinForms.Guna2TextBox();
             btnLogin = new Guna.UI2.WinForms.Guna2Button();
+            btnSeedData = new Guna.UI2.WinForms.Guna2Button();
             SuspendLayout();
             // 
             // txtUsername
@@ -50,7 +53,7 @@
             txtUsername.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
             txtUsername.Font = new Font("Segoe UI", 9F);
             txtUsername.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
-            txtUsername.Location = new Point(119, 61);
+            txtUsername.Location = new Point(58, 58);
             txtUsername.Margin = new Padding(3, 4, 3, 4);
             txtUsername.Name = "txtUsername";
             txtUsername.PlaceholderText = "";
@@ -70,7 +73,7 @@
             txtPassword.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
             txtPassword.Font = new Font("Segoe UI", 9F);
             txtPassword.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
-            txtPassword.Location = new Point(119, 159);
+            txtPassword.Location = new Point(58, 160);
             txtPassword.Margin = new Padding(3, 4, 3, 4);
             txtPassword.Name = "txtPassword";
             txtPassword.PlaceholderText = "";
@@ -88,7 +91,7 @@
             btnLogin.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             btnLogin.Font = new Font("Segoe UI", 9F);
             btnLogin.ForeColor = Color.White;
-            btnLogin.Location = new Point(180, 271);
+            btnLogin.Location = new Point(58, 270);
             btnLogin.Name = "btnLogin";
             btnLogin.ShadowDecoration.CustomizableEdges = customizableEdges6;
             btnLogin.Size = new Size(225, 56);
@@ -96,11 +99,31 @@
             btnLogin.Text = "btnLogin";
             btnLogin.Click += btnLogin_Click;
             // 
+            // btnSeedData
+            // 
+            btnSeedData.CustomizableEdges = customizableEdges7;
+            btnSeedData.DisabledState.BorderColor = Color.DarkGray;
+            btnSeedData.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnSeedData.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnSeedData.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnSeedData.FillColor = Color.FromArgb(64, 64, 64);
+            btnSeedData.Font = new Font("Segoe UI", 9F);
+            btnSeedData.ForeColor = Color.White;
+            btnSeedData.Location = new Point(521, 222);
+            btnSeedData.Name = "btnSeedData";
+            btnSeedData.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            btnSeedData.Size = new Size(225, 84);
+            btnSeedData.TabIndex = 3;
+            btnSeedData.Text = "Đừng nhấn cái này cuối hệ thống t mới chính nhấn nó ra lỗi t chửi :)))";
+            btnSeedData.Visible = false;
+            btnSeedData.Click += btnSeedData_Click;
+            // 
             // frmLogin
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnSeedData);
             Controls.Add(btnLogin);
             Controls.Add(txtPassword);
             Controls.Add(txtUsername);
@@ -114,5 +137,6 @@
         private Guna.UI2.WinForms.Guna2TextBox txtUsername;
         private Guna.UI2.WinForms.Guna2TextBox txtPassword;
         private Guna.UI2.WinForms.Guna2Button btnLogin;
+        private Guna.UI2.WinForms.Guna2Button btnSeedData;
     }
 }

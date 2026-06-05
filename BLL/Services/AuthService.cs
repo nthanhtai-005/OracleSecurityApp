@@ -24,6 +24,10 @@ namespace BLL.Services
             // 1. Tạo chuỗi kết nối động dựa trên user/pass người dùng nhập
             // Lưu ý: Tùy user có quyền SYSDBA hay không mà chuỗi này có thể cần sửa lại chút xíu
             string testConnString = $"User Id={username}; Password={rawPassword}; Data Source=localhost:1521/FREEPDB1;";
+            if (username.Trim().ToUpper() == "SYS")
+            {
+                testConnString += " DBA Privilege=SYSDBA;";
+            }
 
             try
             {
@@ -97,5 +101,34 @@ namespace BLL.Services
         }
 
         */
+
+        public void SeedDataMatKhauChoNhom()
+        {
+            // 1. Danh sách các tài khoản và mật khẩu gốc cần đồng bộ
+            var danhSachUser = new System.Collections.Generic.Dictionary<string, string>
+            {
+                { "ADMIN_BM", "Oracle_1234" },
+                { "NTHANHTAI", "Tai_1234" },
+                { "PVNHATKHA", "Kha_1234" },
+                { "NTPTHANH", "Thanh_1234" }
+            };
+
+            // 2. Chạy vòng lặp để cập nhật từng người
+            foreach (var item in danhSachUser)
+            {
+                string username = item.Key;
+                string rawPass = item.Value;
+
+                // Sinh Salt và Hash chuẩn xác từ code C# của bạn
+                string newSalt = HashHelper.GenerateSalt();
+                string newHash = HashHelper.HashPassword(rawPass, newSalt);
+
+                // Chạy lệnh UPDATE đè lên dữ liệu cũ trong bảng APP_USERS
+                string sqlUpdate = $"UPDATE APP_USERS SET Password_Hash = '{newHash}', Salt = '{newSalt}' WHERE Username = '{username}'";
+
+                // Lưu ý: Đảm bảo _dbExecutor đang chạy bằng chuỗi kết nối của ADMIN_BM nhé
+                _dbExecutor.ExecuteNonQuery(sqlUpdate);
+            }
+        }
     }
 }

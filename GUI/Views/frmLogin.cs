@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BLL.Services;
+using GUI.Interfaces;
+using GUI.Presenters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,8 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GUI.Interfaces;
-using GUI.Presenters;
 
 namespace GUI.Views
 {
@@ -46,6 +47,21 @@ namespace GUI.Views
             this.Hide();           // Ẩn form Login
             mainForm.ShowDialog(); // Mở form Main lên
             this.Close();          // Tắt hẳn app khi form Main bị đóng
+        }
+
+        private void btnSeedData_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AuthService authService = new AuthService();
+                authService.SeedDataMatKhauChoNhom();
+
+                MessageBox.Show("Đã đồng bộ Hash C# thành công cho cả nhóm! Giờ test đăng nhập thôi.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
