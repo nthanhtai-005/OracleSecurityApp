@@ -1,17 +1,26 @@
+﻿using System;
+using System.Windows.Forms;
+using GUI.Views;
+using GUI.Presenters;
+
 namespace GUI
 {
-    internal static class Program
+    static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            // 1. Khởi tạo View
+            var view = new frmTestConnection();
+
+            // 2. Khởi tạo Presenter và truyền View vào
+            var presenter = new TestConnectionPresenter(view);
+
+            // 3. Chạy ứng dụng
+            Application.Run(view);
         }
     }
 }
