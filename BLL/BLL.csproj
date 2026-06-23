@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj" />
+    <ProjectReference Include="..\MODELS\MODELS.csproj" />
   </ItemGroup>
 
 </Project>

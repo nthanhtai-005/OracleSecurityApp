@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MODELS
+{
+    public class CreateUserRequest
+    {
+        public string Username { get; set; } = "";
+        public string Password { get; set; } = "";
+        public string Profile { get; set; } = "";
+        public string DefaultTablespace { get; set; } = "";
+    }
+}

@@ -48,7 +48,7 @@ namespace GUI.Views
         public void SetDemoTableMenuVisible(bool isVisible) => btnDemo.Visible = isVisible;
 
         // 4. Thực thi các lệnh MỞ FORM (Dùng ShowDialog để mở dạng cửa sổ Pop-up)
-        public void ShowUserForm() { new frmUser().ShowDialog(); }
+        public void ShowUserForm() { new frmUserManagement().ShowDialog(); }
         public void ShowRoleForm() { new frmRole().ShowDialog(); }
         public void ShowProfileForm() { new frmProfile().ShowDialog(); }
         public void ShowGrantForm() { new frmGrant().ShowDialog(); }
