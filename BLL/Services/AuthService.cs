@@ -108,9 +108,16 @@ namespace BLL.Services
             var danhSachUser = new System.Collections.Generic.Dictionary<string, string>
             {
                 { "ADMIN_BM", "Oracle_1234" },
-                { "NTHANHTAI", "Tai_1234" },
-                { "PVNHATKHA", "Kha_1234" },
-                { "NTPTHANH", "Thanh_1234" }
+                { "USER01", "User@123" },
+                { "USER02", "User@123" },
+                { "USER03", "User@123" },
+                { "USER04", "User@123" },
+                { "USER05", "User@123" },
+                { "USER06", "User@123" },
+                { "USER07", "User@123" },
+                { "USER08", "User@123" },
+                { "USER09", "User@123" },
+                { "USER10", "User@123" }
             };
 
             // 2. Chạy vòng lặp để cập nhật từng người

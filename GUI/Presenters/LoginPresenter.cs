@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GUI.Interfaces;
-using BLL.Services;
+using BLL.Services.Interfaces;
+using BLL.Services.Implementations;
+using DAL.Repositories.Interfaces;
+using DAL.Repositories.Implementations;
 
 namespace GUI.Presenters
 {
     public class LoginPresenter
     {
         private readonly ILoginView _view;
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
         public LoginPresenter(ILoginView view)
         {
             _view = view;
-            _authService = new AuthService();
-
-            // Gắn kết sự kiện lắng nghe nút bấm
+            IAuthRepo authRepo = new AuthRepo();
+            _authService = new AuthService(authRepo);
             _view.LoginClicked += OnLoginClicked;
         }
 
@@ -27,17 +25,14 @@ namespace GUI.Presenters
             string user = _view.Username;
             string pass = _view.Password;
 
-            // 1. Kiểm tra không được để trống
             if (string.IsNullOrWhiteSpace(user) || string.IsNullOrWhiteSpace(pass))
             {
                 _view.ShowMessage("Vui lòng nhập đầy đủ Username và Password!", true);
                 return;
             }
 
-            // 2. Nhờ BLL kết nối thử xuống Oracle và nạp quyền vào Session
             bool isSuccess = _authService.LoginAndLoadSession(user, pass);
 
-            // 3. Xử lý kết quả
             if (isSuccess)
             {
                 _view.ShowMessage("Đăng nhập thành công!");

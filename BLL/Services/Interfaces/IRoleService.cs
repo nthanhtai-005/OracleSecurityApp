@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DAL.Repositories;
 
-namespace BLL.Services
+namespace BLL.Services.Interfaces
 {
-    public class UserService
+    internal interface IRoleService
     {
     }
 }

@@ -115,7 +115,6 @@
             btnSeedData.Size = new Size(225, 84);
             btnSeedData.TabIndex = 3;
             btnSeedData.Text = "Đừng nhấn cái này cuối hệ thống t mới chính nhấn nó ra lỗi t chửi :)))";
-            btnSeedData.Visible = false;
             btnSeedData.Click += btnSeedData_Click;
             // 
             // frmLogin

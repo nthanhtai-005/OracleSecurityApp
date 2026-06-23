@@ -1,67 +1,51 @@
-﻿using BLL.Services;
+﻿using System;
+using System.Windows.Forms;
 using GUI.Interfaces;
 using GUI.Presenters;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using BLL.Services.Interfaces;
+using BLL.Services.Implementations;
+using DAL.Repositories.Interfaces;
+using DAL.Repositories.Implementations;
 
 namespace GUI.Views
 {
     public partial class frmLogin : Form, ILoginView
     {
         private readonly LoginPresenter _presenter;
+
         public frmLogin()
         {
             InitializeComponent();
-            // Giao quyền cho Presenter quản lý form này
             _presenter = new LoginPresenter(this);
         }
-        // 1. Cung cấp dữ liệu
+
         public string Username => txtUsername.Text;
         public string Password => txtPassword.Text;
 
-        // 2. Khai báo sự kiện
         public event EventHandler LoginClicked;
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
             LoginClicked?.Invoke(this, EventArgs.Empty);
         }
-        // 4. Hàm hiển thị hộp thoại
+
         public void ShowMessage(string message, bool isError = false)
         {
             MessageBoxIcon icon = isError ? MessageBoxIcon.Error : MessageBoxIcon.Information;
             MessageBox.Show(message, "Thông báo", MessageBoxButtons.OK, icon);
         }
 
-        // 5. Hàm chuyển sang Form Main (Presenter sẽ gọi hàm này khi login đúng)
         public void GoToMainForm()
         {
             frmMain mainForm = new frmMain();
-            this.Hide();           // Ẩn form Login
-            mainForm.ShowDialog(); // Mở form Main lên
-            this.Close();          // Tắt hẳn app khi form Main bị đóng
+            this.Hide();           
+            mainForm.ShowDialog(); 
+            this.Close();          
         }
 
         private void btnSeedData_Click(object sender, EventArgs e)
         {
-            try
-            {
-                AuthService authService = new AuthService();
-                authService.SeedDataMatKhauChoNhom();
-
-                MessageBox.Show("Đã đồng bộ Hash C# thành công cho cả nhóm! Giờ test đăng nhập thôi.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            
         }
     }
 }
