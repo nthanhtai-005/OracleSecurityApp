@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Models
+namespace DTO
 {
-    internal class PrivilegeModel
+    internal class RoleModel
     {
     }
 }
