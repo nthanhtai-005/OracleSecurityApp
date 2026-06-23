@@ -43,12 +43,12 @@ namespace BLL.Services.Implementations
                 // Kết nối vào Oracle bằng tài khoản của User
                 using (var conn = new Oracle.ManagedDataAccess.Client.OracleConnection(userConnString))
                 {
-                    conn.Open(); 
+                    conn.Open();
                 }
 
-                OracleConnectionManager.CurrentConnectionString = userConnString;
-
                 SessionContext.ClearSession();
+
+                OracleConnectionManager.CurrentConnectionString = userConnString;
                 SessionContext.CurrentUsername = username;
 
                 DataTable dtPrivs = _authRepo.GetSessionPrivileges();

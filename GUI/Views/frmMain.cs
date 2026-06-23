@@ -31,7 +31,7 @@ namespace GUI.Views
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            
+            MainLoad?.Invoke(this, EventArgs.Empty);
         }
         // 2. Bắt sự kiện người dùng bấm nút trên giao diện và ném cho Presenter
         private void btnUser_Click(object sender, EventArgs e) => OpenUserClicked?.Invoke(this, EventArgs.Empty);

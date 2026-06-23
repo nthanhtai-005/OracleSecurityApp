@@ -8,6 +8,7 @@ namespace GUI.Interfaces
 {
     public interface IMainView
     {
+        event EventHandler MainLoad;
         // THÊM MỚI 1: Các sự kiện báo cáo có người click nút
         event EventHandler OpenUserClicked;
         event EventHandler OpenRoleClicked;

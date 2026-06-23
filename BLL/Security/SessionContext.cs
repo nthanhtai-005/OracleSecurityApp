@@ -23,7 +23,6 @@ namespace BLL.Security
             CurrentUsername = null;
             CurrentPrivileges.Clear();
 
-            // THÊM DÒNG NÀY: Trả lại quyền gác cổng cho ADMIN_BM sau khi User đăng xuất
             OracleConnectionManager.CurrentConnectionString = "Data Source=localhost:1521/DB_BAOMAT; User Id=ADMIN_BM; Password=Oracle_1234;";
         }
     }

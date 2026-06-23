@@ -1,11 +1,6 @@
 ﻿using BLL.Security;
-using BLL.Services;
 using GUI.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GUI.Presenters
 {
@@ -17,7 +12,9 @@ namespace GUI.Presenters
         {
             _view = view;
 
-            ApplyMainSecurity();
+            // 1. Lắng nghe sự kiện khi Form Main bắt đầu mở lên
+            _view.MainLoad += OnMainLoad;
+
             _view.OpenUserClicked += OnOpenUserClicked;
             _view.OpenRoleClicked += OnOpenRoleClicked;
             _view.OpenProfileClicked += OnOpenProfileClicked;
@@ -25,38 +22,49 @@ namespace GUI.Presenters
             _view.OpenDemoClicked += OnOpenDemoClicked;
         }
 
+        // 2. Hàm này sẽ tự động chạy khi Form Main Load xong
+        private void OnMainLoad(object sender, EventArgs e)
+        {
+            ApplyMainSecurity();
+        }
+
         private void ApplyMainSecurity()
         {
-            // 1. Nút Quản lý User (Chỉ cần có 1 trong 3 quyền Tạo, Sửa, Xóa là cho hiện nút mở Form)
-            bool canOpenUserForm = SessionContext.HasPrivilege("CREATE USER") ||
+            // 3. THÊM DÒNG NÀY: Kiểm tra xem có phải là Admin tối cao không
+            bool isAdmin = SessionContext.CurrentUsername?.ToUpper() == "ADMIN_BM" || SessionContext.HasPrivilege("DBA");
+
+            // Nút Quản lý User (Thêm isAdmin vào đầu)
+            bool canOpenUserForm = isAdmin ||
+                                   SessionContext.HasPrivilege("CREATE USER") ||
                                    SessionContext.HasPrivilege("ALTER USER") ||
                                    SessionContext.HasPrivilege("DROP USER");
             _view.SetUserMenuVisible(canOpenUserForm);
 
-            // 2. Nút Quản lý Role
-            bool canOpenRoleForm = SessionContext.HasPrivilege("CREATE ROLE") ||
+            // Nút Quản lý Role
+            bool canOpenRoleForm = isAdmin ||
+                                   SessionContext.HasPrivilege("CREATE ROLE") ||
                                    SessionContext.HasPrivilege("ALTER ANY ROLE") ||
                                    SessionContext.HasPrivilege("DROP ANY ROLE") ||
                                    SessionContext.HasPrivilege("GRANT ANY ROLE");
             _view.SetRoleMenuVisible(canOpenRoleForm);
 
-            // 3. Nút Quản lý Profile
-            bool canOpenProfileForm = SessionContext.HasPrivilege("CREATE PROFILE") ||
+            // Nút Quản lý Profile
+            bool canOpenProfileForm = isAdmin ||
+                                      SessionContext.HasPrivilege("CREATE PROFILE") ||
                                       SessionContext.HasPrivilege("ALTER PROFILE") ||
                                       SessionContext.HasPrivilege("DROP PROFILE");
             _view.SetProfileMenuVisible(canOpenProfileForm);
 
-            // 4. Nút Gán Quyền (Grant)
-            // Giả định: Người có quyền GRANT ANY ROLE hoặc GRANT ANY PRIVILEGE thì được mở form này
-            bool canOpenGrantForm = SessionContext.HasPrivilege("GRANT ANY ROLE") ||
+            // Nút Gán Quyền (Grant)
+            bool canOpenGrantForm = isAdmin ||
+                                    SessionContext.HasPrivilege("GRANT ANY ROLE") ||
                                     SessionContext.HasPrivilege("GRANT ANY PRIVILEGE");
             _view.SetGrantMenuVisible(canOpenGrantForm);
 
-            // 5. Nút Demo Table
-            // Thường thì bảng Demo ai cũng có thể bấm vào xem thử (để bị văng lỗi thiếu quyền, demo cho giảng viên xem)
-            // Nên ta có thể luôn set là True, hoặc check quyền SELECT ANY TABLE
+            // Nút Demo Table
             _view.SetDemoTableMenuVisible(true);
         }
+
         private void OnOpenUserClicked(object sender, EventArgs e) => _view.ShowUserForm();
         private void OnOpenRoleClicked(object sender, EventArgs e) => _view.ShowRoleForm();
         private void OnOpenProfileClicked(object sender, EventArgs e) => _view.ShowProfileForm();

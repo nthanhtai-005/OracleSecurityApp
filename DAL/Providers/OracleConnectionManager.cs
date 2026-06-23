@@ -16,15 +16,5 @@ namespace DAL.Providers
         {
             return new OracleConnection(CurrentConnectionString);
         }
-
-        // Biến static để lưu chuỗi kết nối dùng chung cho toàn phiên làm việc để test
-        // Lưu ý: mọi người đổi chuổi kết nối từ phần datasourcce thôi 
-        /*   public static string CurrentConnectionString { get; set; } = "Data Source=localhost:1521/FREEPDB1;";
-
-           public OracleConnection GetConnection()
-           {
-               return new OracleConnection(CurrentConnectionString);
-           }
-        */
     }
 }
