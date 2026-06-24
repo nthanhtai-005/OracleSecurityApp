@@ -1,9 +1,6 @@
 ﻿using System;
 using GUI.Interfaces;
 using BLL.Services.Interfaces;
-using BLL.Services.Implementations;
-using DAL.Repositories.Interfaces;
-using DAL.Repositories.Implementations;
 
 namespace GUI.Presenters
 {
@@ -12,11 +9,10 @@ namespace GUI.Presenters
         private readonly ILoginView _view;
         private readonly IAuthService _authService;
 
-        public LoginPresenter(ILoginView view)
+        public LoginPresenter(ILoginView view, IAuthService authService)
         {
             _view = view;
-            IAuthRepo authRepo = new AuthRepo();
-            _authService = new AuthService(authRepo);
+            _authService = authService;
             _view.LoginClicked += OnLoginClicked;
         }
 
@@ -36,7 +32,7 @@ namespace GUI.Presenters
             if (isSuccess)
             {
                 _view.ShowMessage("Đăng nhập thành công!");
-                _view.GoToMainForm(); // Ra lệnh cho Form Login tự đóng và mở Form Main lên
+                _view.GoToMainForm();
             }
             else
             {

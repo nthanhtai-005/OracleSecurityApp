@@ -2,21 +2,16 @@
 using System.Windows.Forms;
 using GUI.Interfaces;
 using GUI.Presenters;
-using BLL.Services.Interfaces;
-using BLL.Services.Implementations;
-using DAL.Repositories.Interfaces;
-using DAL.Repositories.Implementations;
 
 namespace GUI.Views
 {
     public partial class frmLogin : Form, ILoginView
     {
-        private readonly LoginPresenter _presenter;
+        private LoginPresenter _presenter;
 
         public frmLogin()
         {
             InitializeComponent();
-            _presenter = new LoginPresenter(this);
         }
 
         public string Username => txtUsername.Text;
@@ -46,6 +41,10 @@ namespace GUI.Views
         private void btnSeedData_Click(object sender, EventArgs e)
         {
             
+        }
+        public void SetPresenter(LoginPresenter presenter)
+        {
+            _presenter = presenter;
         }
     }
 }
