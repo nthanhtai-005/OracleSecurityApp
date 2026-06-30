@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using GUI.Interfaces;
 using BLL.Services.Interface;
+using BLL.Services.Implementations;
+using DAL.Repositories.Implementations;
+using DAL.Providers;
+
 
 namespace GUI.Presenters
 {
@@ -15,21 +19,23 @@ namespace GUI.Presenters
         private readonly IUserService _service;
 
         public UserManagementPresenter(
-            IUserManagementView view,
-            IUserService service)
+            IUserManagementView view)
         {
             _view = view;
-            _service = service;
+            var repo = new UserRepository(
+               OracleConnectionManager.CurrentConnectionString);
+
+            _service = new UserService(repo);
+
+            _view.DeleteClicked += OnDeleteClicked;
+            _view.LockClicked += OnLockClicked;
+            _view.UnLockClicked += OnUnLockClicked;
         }
 
         public void LoadUsers()
         {
-            var users = _service.GetAllUsers();
-            //MessageBox.Show($"Presenter: {users.Count}");
-            _view.DisplayUsers(users);
-            _view.DeleteClicked += OnDeleteClicked;
-            _view.LockClicked += OnLockClicked;
-            _view.UnLockClicked += OnUnLockClicked;
+            var users = _service.GetAllUsers();          
+            _view.DisplayUsers(users);          
         }
         private void OnDeleteClicked(object? sender,EventArgs e)
         {

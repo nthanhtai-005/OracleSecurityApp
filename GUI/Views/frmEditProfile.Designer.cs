@@ -46,6 +46,13 @@
             numConnectTime = new NumericUpDown();
             numPasswordGrace = new NumericUpDown();
             numPasswordLock = new NumericUpDown();
+            cboFailedLoginType = new ComboBox();
+            cboPasswordLifeType = new ComboBox();
+            cboSessionsType = new ComboBox();
+            cboPasswordLockType = new ComboBox();
+            cboPasswordGraceType = new ComboBox();
+            cboConnectTimeType = new ComboBox();
+            cboIdleTimeType = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)numFailedLogin).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numPasswordLife).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numSessions).BeginInit();
@@ -58,32 +65,36 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(267, 38);
+            label1.Location = new Point(305, 51);
             label1.Name = "label1";
-            label1.Size = new Size(79, 15);
+            label1.Size = new Size(99, 20);
             label1.TabIndex = 0;
             label1.Text = "Profile Name:\n";
             // 
             // numFailedLogin
             // 
-            numFailedLogin.Location = new Point(461, 88);
+            numFailedLogin.Location = new Point(527, 117);
+            numFailedLogin.Margin = new Padding(3, 4, 3, 4);
             numFailedLogin.Name = "numFailedLogin";
-            numFailedLogin.Size = new Size(120, 23);
+            numFailedLogin.Size = new Size(137, 27);
             numFailedLogin.TabIndex = 1;
+            numFailedLogin.ValueChanged += numFailedLogin_ValueChanged;
             // 
             // txtProfileName
             // 
-            txtProfileName.Location = new Point(461, 30);
+            txtProfileName.Location = new Point(527, 40);
+            txtProfileName.Margin = new Padding(3, 4, 3, 4);
             txtProfileName.Name = "txtProfileName";
             txtProfileName.ReadOnly = true;
-            txtProfileName.Size = new Size(120, 23);
+            txtProfileName.Size = new Size(137, 27);
             txtProfileName.TabIndex = 2;
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(267, 382);
+            btnSave.Location = new Point(305, 509);
+            btnSave.Margin = new Padding(3, 4, 3, 4);
             btnSave.Name = "btnSave";
-            btnSave.Size = new Size(117, 37);
+            btnSave.Size = new Size(134, 49);
             btnSave.TabIndex = 3;
             btnSave.Text = "Save";
             btnSave.UseVisualStyleBackColor = true;
@@ -91,50 +102,53 @@
             // 
             // numPasswordLife
             // 
-            numPasswordLife.Location = new Point(461, 132);
+            numPasswordLife.Location = new Point(527, 176);
+            numPasswordLife.Margin = new Padding(3, 4, 3, 4);
             numPasswordLife.Name = "numPasswordLife";
-            numPasswordLife.Size = new Size(120, 23);
+            numPasswordLife.Size = new Size(137, 27);
             numPasswordLife.TabIndex = 4;
             // 
             // numSessions
             // 
-            numSessions.Location = new Point(461, 175);
+            numSessions.Location = new Point(527, 233);
+            numSessions.Margin = new Padding(3, 4, 3, 4);
             numSessions.Name = "numSessions";
-            numSessions.Size = new Size(120, 23);
+            numSessions.Size = new Size(137, 27);
             numSessions.TabIndex = 5;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(267, 96);
+            label2.Location = new Point(305, 128);
             label2.Name = "label2";
-            label2.Size = new Size(126, 15);
+            label2.Size = new Size(157, 20);
             label2.TabIndex = 6;
             label2.Text = "Failed Login Attempts:\n";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(267, 140);
+            label3.Location = new Point(305, 187);
             label3.Name = "label3";
-            label3.Size = new Size(112, 15);
+            label3.Size = new Size(138, 20);
             label3.TabIndex = 7;
             label3.Text = "Password Life Time:\n";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(267, 183);
+            label4.Location = new Point(305, 244);
             label4.Name = "label4";
-            label4.Size = new Size(100, 15);
+            label4.Size = new Size(124, 20);
             label4.TabIndex = 8;
             label4.Text = "Sessions Per User:\n";
             // 
             // btnBack
             // 
-            btnBack.Location = new Point(436, 382);
+            btnBack.Location = new Point(498, 509);
+            btnBack.Margin = new Padding(3, 4, 3, 4);
             btnBack.Name = "btnBack";
-            btnBack.Size = new Size(117, 37);
+            btnBack.Size = new Size(134, 49);
             btnBack.TabIndex = 9;
             btnBack.Text = "Back";
             btnBack.UseVisualStyleBackColor = true;
@@ -143,72 +157,141 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(267, 291);
+            label8.Location = new Point(305, 388);
             label8.Name = "label8";
-            label8.Size = new Size(85, 15);
+            label8.Size = new Size(103, 20);
             label8.TabIndex = 25;
             label8.Text = "Connect Time:";
             // 
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(267, 336);
+            label7.Location = new Point(305, 448);
             label7.Name = "label7";
-            label7.Size = new Size(59, 15);
+            label7.Size = new Size(74, 20);
             label7.TabIndex = 24;
             label7.Text = "Idle Time:";
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(267, 262);
+            label6.Location = new Point(305, 349);
             label6.Name = "label6";
-            label6.Size = new Size(123, 15);
+            label6.Size = new Size(152, 20);
             label6.TabIndex = 23;
             label6.Text = "Password Grace Time:";
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(267, 225);
+            label5.Location = new Point(305, 300);
             label5.Name = "label5";
-            label5.Size = new Size(118, 15);
+            label5.Size = new Size(144, 20);
             label5.TabIndex = 22;
             label5.Text = "Password Lock Time:";
             // 
             // numIdleTime
             // 
-            numIdleTime.Location = new Point(461, 328);
+            numIdleTime.Location = new Point(527, 437);
+            numIdleTime.Margin = new Padding(3, 4, 3, 4);
             numIdleTime.Name = "numIdleTime";
-            numIdleTime.Size = new Size(120, 23);
+            numIdleTime.Size = new Size(137, 27);
             numIdleTime.TabIndex = 21;
             // 
             // numConnectTime
             // 
-            numConnectTime.Location = new Point(461, 283);
+            numConnectTime.Location = new Point(527, 377);
+            numConnectTime.Margin = new Padding(3, 4, 3, 4);
             numConnectTime.Name = "numConnectTime";
-            numConnectTime.Size = new Size(120, 23);
+            numConnectTime.Size = new Size(137, 27);
             numConnectTime.TabIndex = 20;
             // 
             // numPasswordGrace
             // 
-            numPasswordGrace.Location = new Point(461, 254);
+            numPasswordGrace.Location = new Point(527, 339);
+            numPasswordGrace.Margin = new Padding(3, 4, 3, 4);
             numPasswordGrace.Name = "numPasswordGrace";
-            numPasswordGrace.Size = new Size(120, 23);
+            numPasswordGrace.Size = new Size(137, 27);
             numPasswordGrace.TabIndex = 19;
             // 
             // numPasswordLock
             // 
-            numPasswordLock.Location = new Point(461, 217);
+            numPasswordLock.Location = new Point(527, 289);
+            numPasswordLock.Margin = new Padding(3, 4, 3, 4);
             numPasswordLock.Name = "numPasswordLock";
-            numPasswordLock.Size = new Size(120, 23);
+            numPasswordLock.Size = new Size(137, 27);
             numPasswordLock.TabIndex = 18;
+            // 
+            // cboFailedLoginType
+            // 
+            cboFailedLoginType.FormattingEnabled = true;
+            cboFailedLoginType.Location = new Point(710, 116);
+            cboFailedLoginType.Name = "cboFailedLoginType";
+            cboFailedLoginType.Size = new Size(151, 28);
+            cboFailedLoginType.TabIndex = 33;
+            // 
+            // cboPasswordLifeType
+            // 
+            cboPasswordLifeType.FormattingEnabled = true;
+            cboPasswordLifeType.Location = new Point(710, 175);
+            cboPasswordLifeType.Name = "cboPasswordLifeType";
+            cboPasswordLifeType.Size = new Size(151, 28);
+            cboPasswordLifeType.TabIndex = 34;
+            // 
+            // cboSessionsType
+            // 
+            cboSessionsType.FormattingEnabled = true;
+            cboSessionsType.Location = new Point(710, 232);
+            cboSessionsType.Name = "cboSessionsType";
+            cboSessionsType.Size = new Size(151, 28);
+            cboSessionsType.TabIndex = 35;
+            cboSessionsType.SelectedIndexChanged += this.cboPasswordLockType_SelectedIndexChanged;
+            // 
+            // cboPasswordLockType
+            // 
+            cboPasswordLockType.FormattingEnabled = true;
+            cboPasswordLockType.Location = new Point(710, 288);
+            cboPasswordLockType.Name = "cboPasswordLockType";
+            cboPasswordLockType.Size = new Size(151, 28);
+            cboPasswordLockType.TabIndex = 36;
+            cboPasswordLockType.SelectedIndexChanged += comboBox4_SelectedIndexChanged;
+            // 
+            // cboPasswordGraceType
+            // 
+            cboPasswordGraceType.FormattingEnabled = true;
+            cboPasswordGraceType.Location = new Point(710, 338);
+            cboPasswordGraceType.Name = "cboPasswordGraceType";
+            cboPasswordGraceType.Size = new Size(151, 28);
+            cboPasswordGraceType.TabIndex = 37;
+            // 
+            // cboConnectTimeType
+            // 
+            cboConnectTimeType.FormattingEnabled = true;
+            cboConnectTimeType.Location = new Point(710, 380);
+            cboConnectTimeType.Name = "cboConnectTimeType";
+            cboConnectTimeType.Size = new Size(151, 28);
+            cboConnectTimeType.TabIndex = 38;
+            // 
+            // cboIdleTimeType
+            // 
+            cboIdleTimeType.FormattingEnabled = true;
+            cboIdleTimeType.Location = new Point(710, 440);
+            cboIdleTimeType.Name = "cboIdleTimeType";
+            cboIdleTimeType.Size = new Size(151, 28);
+            cboIdleTimeType.TabIndex = 39;
             // 
             // frmEditProfile
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(914, 600);
+            Controls.Add(cboIdleTimeType);
+            Controls.Add(cboConnectTimeType);
+            Controls.Add(cboPasswordGraceType);
+            Controls.Add(cboPasswordLockType);
+            Controls.Add(cboSessionsType);
+            Controls.Add(cboPasswordLifeType);
+            Controls.Add(cboFailedLoginType);
             Controls.Add(label8);
             Controls.Add(label7);
             Controls.Add(label6);
@@ -227,6 +310,7 @@
             Controls.Add(txtProfileName);
             Controls.Add(numFailedLogin);
             Controls.Add(label1);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "frmEditProfile";
             Text = "frmEditProfile";
             Load += frmEditProfile_Load;
@@ -261,5 +345,12 @@
         private NumericUpDown numConnectTime;
         private NumericUpDown numPasswordGrace;
         private NumericUpDown numPasswordLock;
+        private ComboBox cboFailedLoginType;
+        private ComboBox cboPasswordLifeType;
+        private ComboBox cboSessionsType;
+        private ComboBox cboPasswordLockType;
+        private ComboBox cboPasswordGraceType;
+        private ComboBox cboConnectTimeType;
+        private ComboBox cboIdleTimeType;
     }
 }

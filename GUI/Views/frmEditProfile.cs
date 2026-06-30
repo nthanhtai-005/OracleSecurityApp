@@ -23,49 +23,108 @@ namespace GUI.Views
         public frmEditProfile(CreateProfileRequest request)
         {
             InitializeComponent();
-            numFailedLogin.Maximum = 9999;
-            numPasswordLife.Maximum = 9999;
-            numPasswordLock.Maximum = 9999;
-            numPasswordGrace.Maximum = 9999;
-            numSessions.Maximum = 9999;
-            numConnectTime.Maximum = 9999;
-            numIdleTime.Maximum = 9999;
+
+            InitCombo(cboFailedLoginType, numFailedLogin);
+            InitCombo(cboPasswordLifeType, numPasswordLife);
+            InitCombo(cboSessionsType, numPasswordLock);
+            InitCombo(cboPasswordGraceType, numPasswordGrace);
+            InitCombo(cboSessionsType, numSessions);
+            InitCombo(cboConnectTimeType, numConnectTime);
+            InitCombo(cboIdleTimeType, numIdleTime);
 
             txtProfileName.Text = request.ProfileName;
-            numFailedLogin.Value = request.FailedLoginAttempts;
-            numPasswordLife.Value = request.PasswordLifeTime;
-            numPasswordLock.Value = request.PasswordLockTime;
-            numPasswordGrace.Value = request.PasswordGraceTime;
-            numSessions.Value = request.SessionsPerUser;
-            numConnectTime.Value = request.ConnectTime;
-            numIdleTime.Value = request.IdleTime;
 
-            string connectionString =
-                "User Id=SYS;Password=123;Data Source=localhost:1521/FREEPDB1;DBA Privilege=SYSDBA";
+            SetLimitValue(cboFailedLoginType, numFailedLogin, request.FailedLoginAttempts);
+            SetLimitValue(cboPasswordLifeType, numPasswordLife, request.PasswordLifeTime);
+            SetLimitValue(cboSessionsType, numPasswordLock, request.PasswordLockTime);
+            SetLimitValue(cboPasswordGraceType, numPasswordGrace, request.PasswordGraceTime);
+            SetLimitValue(cboSessionsType, numSessions, request.SessionsPerUser);
+            SetLimitValue(cboConnectTimeType, numConnectTime, request.ConnectTime);
+            SetLimitValue(cboIdleTimeType, numIdleTime, request.IdleTime);
 
-            var repo = new UserRepository(connectionString);
-            var service = new UserService(repo);
-
-            _presenter = new EditProfilePresenter(this, service);
+            _presenter = new EditProfilePresenter(this);
         }
 
-        public string ProfileName => txtProfileName.Text;
+        public string ProfileName => txtProfileName.Text.Trim().ToUpper();
 
-        public int FailedLoginAttempts => (int)numFailedLogin.Value;
+        public string FailedLoginAttempts =>
+            GetLimitValue(cboFailedLoginType, numFailedLogin);
 
-        public int PasswordLifeTime => (int)numPasswordLife.Value;
+        public string PasswordLifeTime =>
+            GetLimitValue(cboPasswordLifeType, numPasswordLife);
 
-        public int PasswordLockTime => (int)numPasswordLock.Value;
+        public string PasswordLockTime =>
+            GetLimitValue(cboSessionsType, numPasswordLock);
 
-        public int PasswordGraceTime => (int)numPasswordGrace.Value;
+        public string PasswordGraceTime =>
+            GetLimitValue(cboPasswordGraceType, numPasswordGrace);
 
-        public int SessionsPerUser => (int)numSessions.Value;
+        public string SessionsPerUser =>
+            GetLimitValue(cboSessionsType, numSessions);
 
-        public int ConnectTime => (int)numConnectTime.Value;
+        public string ConnectTime =>
+            GetLimitValue(cboConnectTimeType, numConnectTime);
 
-        public int IdleTime => (int)numIdleTime.Value;
-
+        public string IdleTime =>
+            GetLimitValue(cboIdleTimeType, numIdleTime);
         public event EventHandler? CreateClicked;
+
+        private void InitCombo(ComboBox cbo, NumericUpDown num)
+        {
+            cbo.Items.Clear();
+            cbo.Items.Add("DEFAULT");
+            cbo.Items.Add("UNLIMITED");
+            cbo.Items.Add("VALUE");
+
+            cbo.SelectedIndex = 0;
+
+            num.Minimum = 0;
+            num.Maximum = 9999;
+            num.Enabled = false;
+
+            cbo.SelectedIndexChanged += (s, e) =>
+            {
+                num.Enabled = cbo.Text == "VALUE";
+            };
+        }
+
+        private string GetLimitValue(ComboBox cbo, NumericUpDown num)
+        {
+            if (cbo.Text == "DEFAULT")
+                return "DEFAULT";
+
+            if (cbo.Text == "UNLIMITED")
+                return "UNLIMITED";
+
+            return ((int)num.Value).ToString();
+        }
+
+        private void SetLimitValue(ComboBox cbo, NumericUpDown num, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value) || value.ToUpper() == "DEFAULT")
+            {
+                cbo.Text = "DEFAULT";
+                num.Enabled = false;
+                num.Value = 0;
+                return;
+            }
+
+            if (value.ToUpper() == "UNLIMITED")
+            {
+                cbo.Text = "UNLIMITED";
+                num.Enabled = false;
+                num.Value = 0;
+                return;
+            }
+
+            cbo.Text = "VALUE";
+            num.Enabled = true;
+
+            if (decimal.TryParse(value, out decimal number))
+                num.Value = number;
+            else
+                num.Value = 0;
+        }
 
         public void ShowMessage(string message)
         {
@@ -90,6 +149,19 @@ namespace GUI.Views
         private void frmEditProfile_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void numFailedLogin_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void cboPasswordLockType_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
     }
 }

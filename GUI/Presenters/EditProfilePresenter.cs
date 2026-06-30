@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.Services.Interface;
+using BLL.Services.Implementations;
+using DAL.Providers;
+using DAL.Repositories.Implementations;
 using GUI.Interfaces;
 using MODELS;
 
@@ -14,10 +17,13 @@ namespace GUI.Presenters
         private readonly IEditProfileView _view;
         private readonly IUserService _service;
 
-        public EditProfilePresenter(IEditProfileView view, IUserService service)
+        public EditProfilePresenter(IEditProfileView view)
         {
             _view = view;
-            _service = service;
+            var repo = new UserRepository(
+                OracleConnectionManager.CurrentConnectionString);
+
+            _service = new UserService(repo);
 
             _view.CreateClicked += OnSaveClicked;
         }

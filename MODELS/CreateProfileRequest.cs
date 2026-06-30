@@ -10,18 +10,12 @@ namespace MODELS
     {
         public string ProfileName { get; set; } = "";
 
-        public int FailedLoginAttempts { get; set; }
-
-        public int PasswordLifeTime { get; set; }
-
-        public int PasswordLockTime { get; set; }
-
-        public int PasswordGraceTime { get; set; }
-
-        public int SessionsPerUser { get; set; }
-
-        public int ConnectTime { get; set; }
-
-        public int IdleTime { get; set; }
+        public string FailedLoginAttempts { get; set; } = "DEFAULT";
+        public string PasswordLifeTime { get; set; } = "DEFAULT";
+        public string PasswordLockTime { get; set; } = "DEFAULT";
+        public string PasswordGraceTime { get; set; } = "DEFAULT";
+        public string SessionsPerUser { get; set; } = "DEFAULT";
+        public string ConnectTime { get; set; } = "DEFAULT";
+        public string IdleTime { get; set; } = "DEFAULT";
     }
 }

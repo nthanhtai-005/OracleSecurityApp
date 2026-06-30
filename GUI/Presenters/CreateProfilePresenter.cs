@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.Services.Interface;
+using BLL.Services.Implementations;
+using DAL.Providers;
+using DAL.Repositories.Implementations;
 using GUI.Interfaces;
 using MODELS;
 
@@ -14,10 +17,13 @@ namespace GUI.Presenters
         private readonly ICreateProfileView _view;
         private readonly IUserService _service;
 
-        public CreateProfilePresenter(ICreateProfileView view, IUserService service)
+        public CreateProfilePresenter(ICreateProfileView view)
         {
             _view = view;
-            _service = service;
+            var repo = new UserRepository(
+               OracleConnectionManager.CurrentConnectionString);
+
+            _service = new UserService(repo);
 
             _view.CreateClicked += OnCreateClicked;
         }
@@ -28,20 +34,13 @@ namespace GUI.Presenters
             {
                 CreateProfileRequest request = new CreateProfileRequest
                 {
-                    ProfileName = _view.ProfileName.Trim().ToUpper(),
-
+                    ProfileName = _view.ProfileName,
                     FailedLoginAttempts = _view.FailedLoginAttempts,
-
                     PasswordLifeTime = _view.PasswordLifeTime,
-
                     PasswordLockTime = _view.PasswordLockTime,
-
                     PasswordGraceTime = _view.PasswordGraceTime,
-
                     SessionsPerUser = _view.SessionsPerUser,
-
                     ConnectTime = _view.ConnectTime,
-
                     IdleTime = _view.IdleTime
                 };
 

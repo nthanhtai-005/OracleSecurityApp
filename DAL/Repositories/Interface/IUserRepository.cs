@@ -21,5 +21,18 @@ namespace DAL.Repositories.Interface
         void CreateProfile(CreateProfileRequest request);
         void UpdateProfile(CreateProfileRequest request);
         void DeleteProfile(string username);
+        void UpdateUserAccount(
+             string username,
+             string password,
+             string passwordHash,
+             string salt,
+             string defaultTablespace,
+             string temporaryTablespace,
+             int quotaMB,
+             string fullname,
+             string email);
+
+        List<string> GetTablespaces();
+        List<string> GetTemporaryTablespaces();
     }
 }

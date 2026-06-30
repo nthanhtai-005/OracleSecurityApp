@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using BLL.Services.Interface;
 using GUI.Interfaces;
 using MODELS;
+using DAL.Repositories.Implementations;
+using DAL.Providers;
+using BLL.Services.Implementations;
 
 namespace GUI.Presenters
 {
@@ -15,13 +18,30 @@ namespace GUI.Presenters
         private readonly IUserService _service;
 
         public CreateUserPresenter(
-            ICreateUserView view,
-            IUserService service)
+            ICreateUserView view)
         {
             _view = view;
-            _service = service;
+            var repo = new UserRepository(
+               OracleConnectionManager.CurrentConnectionString);
+
+            _service = new UserService(repo);
 
             _view.CreateClicked += OnCreateClicked;
+        }
+
+        public List<string> GetTablespaces()
+        {
+            return _service.GetTablespaces();
+        }
+
+        public List<string> GetTemporaryTablespaces()
+        {
+            return _service.GetTemporaryTablespaces();
+        }
+
+        public List<string> GetProfiles()
+        {
+            return _service.GetProfiles();
         }
 
         private void OnCreateClicked(
@@ -30,27 +50,26 @@ namespace GUI.Presenters
         {
             try
             {
-                CreateUserRequest request =
-                    new CreateUserRequest
+                CreateUserRequest request =new CreateUserRequest
+             {
+                 Username = _view.Username,
+                 Password = _view.Password,
+                 Profile = _view.Profile,
+                 DefaultTablespace = _view.DefaultTablespace,
+                 TemporaryTablespace = _view.TemporaryTablespace,
+                 QuotaMB = _view.QuotaMB,
+                  Fullname = _view.Fullname,
+                 Email = _view.Email
+             };
+                        _service.CreateUser(request);
+                        _view.ShowMessage(
+                            "Tạo User thành công!");
+                        _view.CloseForm();
+                    }
+                    catch (Exception ex)
                     {
-                        Username = _view.Username,
-                        Password = _view.Password,
-                        Profile = _view.Profile,
-                        DefaultTablespace =
-                            _view.DefaultTablespace
-                    };
-
-                _service.CreateUser(request);
-
-                _view.ShowMessage(
-                    "Tạo User thành công!");
-
-                _view.CloseForm();
-            }
-            catch (Exception ex)
-            {
-                _view.ShowMessage(ex.Message);
-            }
-        }
+                        _view.ShowMessage(ex.Message);
+                    }
+                }
     }
 }

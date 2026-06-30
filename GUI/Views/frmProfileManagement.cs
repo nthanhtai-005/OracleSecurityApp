@@ -17,17 +17,13 @@ namespace GUI.Views
 {
     public partial class frmProfileManagement : Form
     {
-        private UserService _service;
+        private ProfileManagementPresenter _presenter;
 
         public frmProfileManagement()
         {
             InitializeComponent();
 
-            string connectionString =
-                "User Id=SYS;Password=123;Data Source=localhost:1521/FREEPDB1;DBA Privilege=SYSDBA";
-
-            var repo = new UserRepository(connectionString);
-            _service = new UserService(repo);
+            _presenter = new ProfileManagementPresenter();
         }
 
         private void frmProfileManagement_Load(object sender, EventArgs e)
@@ -39,7 +35,7 @@ namespace GUI.Views
         {
             try
             {
-                var profiles = _service.GetProfileSummaries(keyword);
+                var profiles = _presenter.GetProfileSummaries();
 
                 dgvProfiles.DataSource = null;
                 dgvProfiles.DataSource = profiles;
@@ -64,20 +60,6 @@ namespace GUI.Views
                 .Value?.ToString() ?? "";
         }
 
-        private int ConvertLimitToInt(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                return 1;
-
-            if (value == "DEFAULT" || value == "UNLIMITED")
-                return 1;
-
-            if (int.TryParse(value, out int result))
-                return result;
-
-            return 1;
-        }
-
         private void btnCreateProfile_Click(object sender, EventArgs e)
         {
             frmCreateProfile frm = new frmCreateProfile();
@@ -99,25 +81,25 @@ namespace GUI.Views
                 ProfileName = GetSelectedProfileName(),
 
                 FailedLoginAttempts =
-                    ConvertLimitToInt(dgvProfiles.CurrentRow.Cells["FailedLoginAttempts"].Value?.ToString()),
+        dgvProfiles.CurrentRow.Cells["FailedLoginAttempts"].Value?.ToString() ?? "DEFAULT",
 
                 PasswordLifeTime =
-                    ConvertLimitToInt(dgvProfiles.CurrentRow.Cells["PasswordLifeTime"].Value?.ToString()),
+        dgvProfiles.CurrentRow.Cells["PasswordLifeTime"].Value?.ToString() ?? "DEFAULT",
 
                 PasswordLockTime =
-                    ConvertLimitToInt(dgvProfiles.CurrentRow.Cells["PasswordLockTime"].Value?.ToString()),
+        dgvProfiles.CurrentRow.Cells["PasswordLockTime"].Value?.ToString() ?? "DEFAULT",
 
                 PasswordGraceTime =
-                    ConvertLimitToInt(dgvProfiles.CurrentRow.Cells["PasswordGraceTime"].Value?.ToString()),
+        dgvProfiles.CurrentRow.Cells["PasswordGraceTime"].Value?.ToString() ?? "DEFAULT",
 
                 SessionsPerUser =
-                    ConvertLimitToInt(dgvProfiles.CurrentRow.Cells["SessionsPerUser"].Value?.ToString()),
+        dgvProfiles.CurrentRow.Cells["SessionsPerUser"].Value?.ToString() ?? "DEFAULT",
 
                 ConnectTime =
-                    ConvertLimitToInt(dgvProfiles.CurrentRow.Cells["ConnectTime"].Value?.ToString()),
+        dgvProfiles.CurrentRow.Cells["ConnectTime"].Value?.ToString() ?? "DEFAULT",
 
                 IdleTime =
-                    ConvertLimitToInt(dgvProfiles.CurrentRow.Cells["IdleTime"].Value?.ToString())
+        dgvProfiles.CurrentRow.Cells["IdleTime"].Value?.ToString() ?? "DEFAULT"
             };
 
             frmEditProfile frm = new frmEditProfile(request);
@@ -153,7 +135,7 @@ namespace GUI.Views
                 if (result == DialogResult.No)
                     return;
 
-                _service.DeleteProfile(profileName);
+                _presenter.DeleteProfile(profileName);
 
                 MessageBox.Show("Xóa Profile thành công");
                 LoadProfiles();
@@ -180,7 +162,7 @@ namespace GUI.Views
                 return;
             }
 
-            var allProfiles = _service.GetProfilesDetail();
+            var allProfiles = _presenter.GetProfilesDetail();
 
             var result = allProfiles
                 .Where(p => p.ProfileName.ToUpper() == keyword)

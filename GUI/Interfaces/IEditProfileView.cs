@@ -10,24 +10,17 @@ namespace GUI.Interfaces
     {
         string ProfileName { get; }
 
-        int FailedLoginAttempts { get; }
-
-        int PasswordLifeTime { get; }
-
-        int PasswordLockTime { get; }
-
-        int PasswordGraceTime { get; }
-
-        int SessionsPerUser { get; }
-
-        int ConnectTime { get; }
-
-        int IdleTime { get; }
+        string FailedLoginAttempts { get; }
+        string PasswordLifeTime { get; }
+        string PasswordLockTime { get; }
+        string PasswordGraceTime { get; }
+        string SessionsPerUser { get; }
+        string ConnectTime { get; }
+        string IdleTime { get; }
 
         event EventHandler? CreateClicked;
 
         void ShowMessage(string message);
-
         void CloseForm();
     }
 }

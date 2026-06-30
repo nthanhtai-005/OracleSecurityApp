@@ -25,52 +25,60 @@ namespace DAL.Repositories.Implementations
             List<OracleUser> users = new();
 
             string sql = @"
-                SELECT
-                    USERNAME,
-                    ACCOUNT_STATUS,
-                    PROFILE,
-                    DEFAULT_TABLESPACE,
-                    CREATED
-                FROM DBA_USERS
-                ORDER BY USERNAME";
+        SELECT
+            u.USERNAME,
+            u.ACCOUNT_STATUS,
+            u.PROFILE,
+            u.DEFAULT_TABLESPACE,
+            u.TEMPORARY_TABLESPACE,
+            u.CREATED,
+            NVL(a.FULLNAME, '') AS FULLNAME,
+            NVL(a.EMAIL, '') AS EMAIL,
+            NVL(q.QUOTA, '0 MB') AS QUOTA
+        FROM DBA_USERS u
+        LEFT JOIN APP_USERS a
+            ON u.USERNAME = a.USERNAME
+        LEFT JOIN (
+            SELECT
+                USERNAME,
+                MAX(
+                    CASE
+                        WHEN MAX_BYTES = -1 THEN 'UNLIMITED'
+                        ELSE TO_CHAR(ROUND(MAX_BYTES / 1024 / 1024)) || ' MB'
+                    END
+                ) AS QUOTA
+            FROM DBA_TS_QUOTAS
+            GROUP BY USERNAME
+        ) q
+            ON u.USERNAME = q.USERNAME
+        ORDER BY u.USERNAME";
 
-            using (OracleConnection conn =
-                   new OracleConnection(_connectionString))
+            using OracleConnection conn =
+                new OracleConnection(_connectionString);
+
+            conn.Open();
+
+            using OracleCommand cmd =
+                new OracleCommand(sql, conn);
+
+            using OracleDataReader reader =
+                cmd.ExecuteReader();
+
+            while (reader.Read())
             {
-                conn.Open();
-
-                using (OracleCommand cmd =
-                       new OracleCommand(sql, conn))
+                users.Add(new OracleUser
                 {
-                    using (OracleDataReader reader =
-                           cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            users.Add(new OracleUser
-                            {
-                                Username =
-                                    reader["USERNAME"].ToString(),
-
-                                AccountStatus =
-                                    reader["ACCOUNT_STATUS"].ToString(),
-
-                                Profile =
-                                    reader["PROFILE"].ToString(),
-
-                                DefaultTablespace =
-                                    reader["DEFAULT_TABLESPACE"].ToString(),
-
-                                Created =
-                                    Convert.ToDateTime(
-                                        reader["CREATED"])
-                            });
-                        }
-                    }
-                }
+                    Username = reader["USERNAME"]?.ToString() ?? "",
+                    AccountStatus = reader["ACCOUNT_STATUS"]?.ToString() ?? "",
+                    Profile = reader["PROFILE"]?.ToString() ?? "",
+                    DefaultTablespace = reader["DEFAULT_TABLESPACE"]?.ToString() ?? "",
+                    TemporaryTablespace = reader["TEMPORARY_TABLESPACE"]?.ToString() ?? "",
+                    Fullname = reader["FULLNAME"]?.ToString() ?? "",
+                    Email = reader["EMAIL"]?.ToString() ?? "",
+                    Quota = reader["QUOTA"]?.ToString() ?? "",
+                    Created = Convert.ToDateTime(reader["CREATED"])
+                });
             }
-
-
 
             return users;
         }
@@ -105,12 +113,74 @@ namespace DAL.Repositories.Implementations
             return profiles;
         }
 
+        public List<string> GetTablespaces()
+        {
+            List<string> tablespaces = new();
+
+            string sql = @"
+        SELECT TABLESPACE_NAME
+        FROM DBA_TABLESPACES
+        WHERE CONTENTS = 'PERMANENT'
+        ORDER BY TABLESPACE_NAME";
+
+            using OracleConnection conn =
+                new OracleConnection(_connectionString);
+
+            conn.Open();
+
+            using OracleCommand cmd =
+                new OracleCommand(sql, conn);
+
+            using OracleDataReader reader =
+                cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                tablespaces.Add(
+                    reader["TABLESPACE_NAME"]?.ToString() ?? "");
+            }
+
+            return tablespaces;
+        }
+
+        public List<string> GetTemporaryTablespaces()
+        {
+            List<string> tablespaces = new();
+
+            string sql = @"
+        SELECT TABLESPACE_NAME
+        FROM DBA_TABLESPACES
+        WHERE CONTENTS = 'TEMPORARY'
+        ORDER BY TABLESPACE_NAME";
+
+            using OracleConnection conn =
+                new OracleConnection(_connectionString);
+
+            conn.Open();
+
+            using OracleCommand cmd =
+                new OracleCommand(sql, conn);
+
+            using OracleDataReader reader =
+                cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                tablespaces.Add(
+                    reader["TABLESPACE_NAME"]?.ToString() ?? "");
+            }
+
+            return tablespaces;
+        }
+
         public void CreateUser(CreateUserRequest request)
         {
-            string sql = $@"
+            string createUserSql = $@"
         CREATE USER {request.Username}
         IDENTIFIED BY ""{request.Password}""
         DEFAULT TABLESPACE {request.DefaultTablespace}
+        TEMPORARY TABLESPACE {request.TemporaryTablespace}
+        QUOTA {request.QuotaMB}M ON {request.DefaultTablespace}
         PROFILE {request.Profile}";
 
             using OracleConnection conn =
@@ -118,33 +188,103 @@ namespace DAL.Repositories.Implementations
 
             conn.Open();
 
-            using OracleCommand cmd =
-                new OracleCommand(sql, conn);
+            using OracleTransaction tran =
+                conn.BeginTransaction();
 
-            cmd.ExecuteNonQuery();
+            try
+            {
+                using OracleCommand createCmd =
+                    new OracleCommand(createUserSql, conn);
 
-            string grantSql =
-                $"GRANT CREATE SESSION TO {request.Username}";
+                createCmd.Transaction = tran;
+                createCmd.ExecuteNonQuery();
 
-            using OracleCommand grantCmd =
-                new OracleCommand(grantSql, conn);
+                string grantSql =
+                    $"GRANT CREATE SESSION TO {request.Username}";
 
-            grantCmd.ExecuteNonQuery();
+                using OracleCommand grantCmd =
+                    new OracleCommand(grantSql, conn);
+
+                grantCmd.Transaction = tran;
+                grantCmd.ExecuteNonQuery();
+                string insertAppUserSql = @"
+    INSERT INTO APP_USERS
+    (
+        USERNAME,
+        PASSWORD_HASH,
+        SALT,
+        FULLNAME,
+        EMAIL
+    )
+    VALUES
+    (
+        :username,
+        :passwordHash,
+        :salt,
+        :fullname,
+        :email
+    )";
+
+                using OracleCommand insertCmd =
+                    new OracleCommand(insertAppUserSql, conn);
+
+                insertCmd.Transaction = tran;
+
+                insertCmd.Parameters.Add(":username", request.Username.ToUpper());
+                insertCmd.Parameters.Add(":passwordHash", request.PasswordHash);
+                insertCmd.Parameters.Add(":salt", request.Salt);
+                insertCmd.Parameters.Add(":fullname", request.Fullname);
+                insertCmd.Parameters.Add(":email", request.Email);
+
+                insertCmd.ExecuteNonQuery();
+
+                tran.Commit();
+            }
+            catch
+            {
+                tran.Rollback();
+                throw;
+            }
         }
         public void DeleteUser(string username)
         {
-            string sql =
-                $"DROP USER {username} CASCADE";
-
             using OracleConnection conn =
                 new OracleConnection(_connectionString);
 
             conn.Open();
 
-            using OracleCommand cmd =
-                new OracleCommand(sql, conn);
+            using OracleTransaction tran =
+                conn.BeginTransaction();
 
-            cmd.ExecuteNonQuery();
+            try
+            {
+                string deleteAppUserSql =
+                    @"DELETE FROM APP_USERS
+              WHERE USERNAME = :username";
+
+                using OracleCommand deleteAppCmd =
+                    new OracleCommand(deleteAppUserSql, conn);
+
+                deleteAppCmd.Transaction = tran;
+                deleteAppCmd.Parameters.Add(":username", username.ToUpper());
+                deleteAppCmd.ExecuteNonQuery();
+
+                string dropUserSql =
+                    $"DROP USER {username} CASCADE";
+
+                using OracleCommand dropCmd =
+                    new OracleCommand(dropUserSql, conn);
+
+                dropCmd.Transaction = tran;
+                dropCmd.ExecuteNonQuery();
+
+                tran.Commit();
+            }
+            catch
+            {
+                tran.Rollback();
+                throw;
+            }
         }
 
         public void LockUser(string username)
@@ -193,6 +333,93 @@ namespace DAL.Repositories.Implementations
                 new OracleCommand(sql, conn);
 
             cmd.ExecuteNonQuery();
+        }
+
+        public void UpdateUserAccount(
+    string username,
+    string password,
+    string passwordHash,
+    string salt,
+    string defaultTablespace,
+    string temporaryTablespace,
+    int quotaMB,
+    string fullname,
+    string email)
+        {
+            using OracleConnection conn =
+                new OracleConnection(_connectionString);
+
+            conn.Open();
+
+            using OracleTransaction tran =
+                conn.BeginTransaction();
+
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(password))
+                {
+                    string alterPasswordSql =
+                        $@"ALTER USER {username}
+                   IDENTIFIED BY ""{password}""";
+
+                    using OracleCommand passwordCmd =
+                        new OracleCommand(alterPasswordSql, conn);
+
+                    passwordCmd.Transaction = tran;
+                    passwordCmd.ExecuteNonQuery();
+
+                    string updatePasswordAppSql = @"
+                UPDATE APP_USERS
+                SET PASSWORD_HASH = :passwordHash,
+                    SALT = :salt
+                WHERE USERNAME = :username";
+
+                    using OracleCommand updatePassCmd =
+                        new OracleCommand(updatePasswordAppSql, conn);
+
+                    updatePassCmd.Transaction = tran;
+                    updatePassCmd.Parameters.Add(":passwordHash", passwordHash);
+                    updatePassCmd.Parameters.Add(":salt", salt);
+                    updatePassCmd.Parameters.Add(":username", username.ToUpper());
+
+                    updatePassCmd.ExecuteNonQuery();
+                }
+
+                string alterUserSql = $@"
+            ALTER USER {username}
+            DEFAULT TABLESPACE {defaultTablespace}
+            TEMPORARY TABLESPACE {temporaryTablespace}
+            QUOTA {quotaMB}M ON {defaultTablespace}";
+
+                using OracleCommand alterCmd =
+                    new OracleCommand(alterUserSql, conn);
+
+                alterCmd.Transaction = tran;
+                alterCmd.ExecuteNonQuery();
+
+                string updateAppUserSql = @"
+            UPDATE APP_USERS
+            SET FULLNAME = :fullname,
+                EMAIL = :email
+            WHERE USERNAME = :username";
+
+                using OracleCommand updateAppCmd =
+                    new OracleCommand(updateAppUserSql, conn);
+
+                updateAppCmd.Transaction = tran;
+                updateAppCmd.Parameters.Add(":fullname", fullname);
+                updateAppCmd.Parameters.Add(":email", email);
+                updateAppCmd.Parameters.Add(":username", username.ToUpper());
+
+                updateAppCmd.ExecuteNonQuery();
+
+                tran.Commit();
+            }
+            catch
+            {
+                tran.Rollback();
+                throw;
+            }
         }
 
         public void AssignProfile(string username, string profileName)

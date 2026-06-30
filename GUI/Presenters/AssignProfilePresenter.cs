@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.Services.Interface;
+using BLL.Services.Implementations;
+using DAL.Providers;
+using DAL.Repositories.Implementations;
 using GUI.Interfaces;
 
 namespace GUI.Presenters
@@ -14,11 +17,13 @@ namespace GUI.Presenters
         private readonly IUserService _service;
 
         public AssignProfilePresenter(
-            IAssignProfileView view,
-            IUserService service)
+            IAssignProfileView view)
         {
             _view = view;
-            _service = service;
+            var repo = new UserRepository(
+                OracleConnectionManager.CurrentConnectionString);
+
+            _service = new UserService(repo);
 
             LoadProfiles();
 

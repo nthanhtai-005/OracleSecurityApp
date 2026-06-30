@@ -17,34 +17,36 @@ namespace GUI.Views
     public partial class frmCreateProfile : Form, ICreateProfileView
     {
         private CreateProfilePresenter _presenter;
-
         public frmCreateProfile()
         {
             InitializeComponent();
-
-            string connectionString =
-                "User Id=SYS;Password=123;Data Source=localhost:1521/FREEPDB1;DBA Privilege=SYSDBA";
-
-            var repo = new UserRepository(connectionString);
-            var service = new UserService(repo);
-
-            _presenter = new CreateProfilePresenter(this, service);
+            _presenter = new CreateProfilePresenter(this);
         }
-        public string ProfileName => txtProfileName.Text;
-        public int FailedLoginAttempts => (int)numFailedLogin.Value;
+        public string ProfileName => txtProfileName.Text.Trim().ToUpper();
 
-        public int PasswordLifeTime => (int)numPasswordLife.Value;
+        public string FailedLoginAttempts =>
+            GetLimitValue(cboFailedLoginType, numFailedLogin);
 
-        public int SessionsPerUser => (int)numSessions.Value;
-        public int PasswordLockTime => (int)numPasswordLock.Value;
+        public string PasswordLifeTime =>
+            GetLimitValue(cboPasswordLifeType, numPasswordLife);
 
-        public int PasswordGraceTime => (int)numPasswordGrace.Value;
+        public string SessionsPerUser =>
+            GetLimitValue(cboSessionsType, numSessions);
 
-        public int ConnectTime => (int)numConnectTime.Value;
+        public string PasswordLockTime =>
+            GetLimitValue(cboPasswordLockType, numPasswordLock);
 
-        public int IdleTime => (int)numIdleTime.Value;
+        public string PasswordGraceTime =>
+            GetLimitValue(cboPasswordGraceType, numPasswordGrace);
 
-        public event EventHandler CreateClicked;
+        public string ConnectTime =>
+            GetLimitValue(cboConnectTimeType, numConnectTime);
+
+        public string IdleTime =>
+            GetLimitValue(cboIdleTimeType, numIdleTime);
+
+
+        public event EventHandler? CreateClicked;
         public void ShowMessage(string message)
         {
             MessageBox.Show(message);
@@ -54,16 +56,15 @@ namespace GUI.Views
         {
             this.Close();
         }
-
         private void frmCreateProfile_Load(object sender, EventArgs e)
         {
-            numFailedLogin.Minimum = 1;
-            numPasswordLife.Minimum = 1;
-            numPasswordLock.Minimum = 1;
-            numPasswordGrace.Minimum = 1;
-            numSessions.Minimum = 1;
-            numConnectTime.Minimum = 1;
-            numIdleTime.Minimum = 1;
+            InitCombo(cboFailedLoginType, numFailedLogin);
+            InitCombo(cboPasswordLifeType, numPasswordLife);
+            InitCombo(cboSessionsType, numSessions);
+            InitCombo(cboPasswordLockType, numPasswordLock);
+            InitCombo(cboPasswordGraceType, numPasswordGrace);
+            InitCombo(cboConnectTimeType, numConnectTime);
+            InitCombo(cboIdleTimeType, numIdleTime);
 
             numFailedLogin.Maximum = 9999;
             numPasswordLife.Maximum = 9999;
@@ -81,14 +82,42 @@ namespace GUI.Views
             numConnectTime.Value = 60;
             numIdleTime.Value = 15;
         }
+        private void InitCombo(ComboBox cbo, NumericUpDown num)
+        {
+            cbo.Items.Clear();
+            cbo.Items.Add("DEFAULT");
+            cbo.Items.Add("UNLIMITED");
+            cbo.Items.Add("VALUE");
+            cbo.SelectedIndex = 0;
+
+            num.Enabled = false;
+
+            cbo.SelectedIndexChanged += (s, e) =>
+            {
+                num.Enabled = cbo.Text == "VALUE";
+            };
+        }
+       private string GetLimitValue(ComboBox cbo, NumericUpDown num)
+        {
+            if (cbo.Text == "DEFAULT")
+                return "DEFAULT";
+
+            if (cbo.Text == "UNLIMITED")
+                return "UNLIMITED";
+
+            return ((int)num.Value).ToString();
+        }
         private void btnCreate_Click(object sender, EventArgs e)
         {
             CreateClicked?.Invoke(this, EventArgs.Empty);
         }
-
         private void btnBack_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+        private void cboFailedLoginType_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

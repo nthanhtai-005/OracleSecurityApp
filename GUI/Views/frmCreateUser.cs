@@ -20,18 +20,7 @@ namespace GUI.Views
         public frmCreateUser()
         {
             InitializeComponent();
-            string connectionString = "User Id=SYS;Password=123;Data Source=localhost:1521/FREEPDB1;DBA Privilege=SYSDBA";
-
-            var repo =
-                new UserRepository(connectionString);
-
-            var service =
-                new UserService(repo);
-
-            _presenter =
-                new CreateUserPresenter(
-                    this,
-                    service);
+            _presenter = new CreateUserPresenter(this);
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e) { }
@@ -45,6 +34,15 @@ namespace GUI.Views
         {
             get => txtUsername.Text.Trim();
         }
+        public string TemporaryTablespace
+        {
+            get => cboTemporaryTablespace.Text;
+        }
+
+        public int QuotaMB
+        {
+            get => (int)numericUpDown1.Value;
+        }
 
         public string Password { get => txtPassword.Text; }
         public string Profile { get => cboProfile.Text; }
@@ -53,6 +51,10 @@ namespace GUI.Views
         {
             get => cboTablespace.Text;
         }
+
+        public string Fullname => txtFullname.Text.Trim();
+
+        public string Email => txtEmail.Text.Trim();
         public event EventHandler? CreateClicked;
         public void ShowMessage(string message)
         {
@@ -66,7 +68,43 @@ namespace GUI.Views
 
         private void frmCreateUser_Load(object sender, EventArgs e)
         {
+            LoadComboboxData();
+        }
 
+        private void LoadComboboxData()
+        {
+            try
+            {
+                cboTablespace.Items.Clear();
+                cboTemporaryTablespace.Items.Clear();
+                cboProfile.Items.Clear();
+
+                var tablespaces = _presenter.GetTablespaces();
+                var tempTablespaces = _presenter.GetTemporaryTablespaces();
+                var profiles = _presenter.GetProfiles();
+
+                foreach (var item in tablespaces)
+                    cboTablespace.Items.Add(item);
+
+                foreach (var item in tempTablespaces)
+                    cboTemporaryTablespace.Items.Add(item);
+
+                foreach (var item in profiles)
+                    cboProfile.Items.Add(item);
+
+                if (cboTablespace.Items.Count > 0)
+                    cboTablespace.SelectedIndex = 0;
+
+                if (cboTemporaryTablespace.Items.Count > 0)
+                    cboTemporaryTablespace.SelectedIndex = 0;
+
+                if (cboProfile.Items.Count > 0)
+                    cboProfile.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

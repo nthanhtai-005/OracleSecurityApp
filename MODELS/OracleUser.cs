@@ -8,11 +8,14 @@ namespace MODELS
 {
     public class OracleUser
     {
-        public string Username { get; set; } = string.Empty;
-        public string AccountStatus { get; set; } = string.Empty;
-        public string Profile { get; set; } = string.Empty;
-        public string DefaultTablespace { get; set; } = string.Empty;
-        public string TemporaryTablespace { get; set; } = string.Empty;
+        public string Username { get; set; } = "";
+        public string AccountStatus { get; set; } = "";
+        public string Profile { get; set; } = "";
+        public string DefaultTablespace { get; set; } = "";
+        public string TemporaryTablespace { get; set; } = "";
+        public string Fullname { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Quota { get; set; } = "";
         public DateTime Created { get; set; }
     }
 }

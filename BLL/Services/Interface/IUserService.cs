@@ -12,6 +12,8 @@ namespace BLL.Services.Interface
         List<OracleUser> GetAllUsers();
         List<string> GetProfiles();
         List<OracleProfileSummary> GetProfileSummaries(string keyword = "");
+        List<string> GetTablespaces();
+        List<string> GetTemporaryTablespaces();
         void CreateUser(CreateUserRequest request);
         void DeleteUser(string username);
         void LockUser(string username);
@@ -22,6 +24,14 @@ namespace BLL.Services.Interface
         void CreateProfile(CreateProfileRequest request);
         void UpdateProfile(CreateProfileRequest request);
         void DeleteProfile(string username);
+        void UpdateUserAccount(
+            string username,
+            string password,
+            string defaultTablespace,
+            string temporaryTablespace,
+            int quotaMB,
+            string fullname,
+            string email);
 
     }
 }

@@ -22,13 +22,7 @@ namespace GUI.Views
         private UserManagementPresenter _presenter;
         public frmUserManagement(){
             InitializeComponent();
-            string connectionString = "User Id=SYS;Password=123;Data Source=localhost:1521/FREEPDB1;DBA Privilege=SYSDBA";
-            var repo = new UserRepository(connectionString);
-            var service = new UserService(repo);
-            _presenter =
-                new UserManagementPresenter(
-                    this,
-                    service);
+            _presenter = new UserManagementPresenter(this);
         }
         private void frmUserManagement_Load(object sender, EventArgs e){
             _presenter.LoadUsers();
@@ -63,9 +57,32 @@ namespace GUI.Views
         private void btnUnLock_Click(object sender, EventArgs e){
             UnLockClicked?.Invoke(this, EventArgs.Empty);
         }
-        private void btnEdit_Click(object sender, EventArgs e){
-            frmChangePassword frm = new frmChangePassword(SelectedUsername);
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            if (dgvUsers.CurrentRow == null)
+            {
+                MessageBox.Show("Vui lòng chọn User cần sửa");
+                return;
+            }
+
+            string username =
+                dgvUsers.CurrentRow.Cells["Username"].Value?.ToString() ?? "";
+
+            string defaultTablespace =
+                dgvUsers.CurrentRow.Cells["DefaultTablespace"].Value?.ToString() ?? "";
+
+            string temporaryTablespace =
+                dgvUsers.CurrentRow.Cells["TemporaryTablespace"].Value?.ToString() ?? "";
+
+            frmChangePassword frm =
+                new frmChangePassword(
+                    username,
+                    defaultTablespace,
+                    temporaryTablespace);
+
             frm.ShowDialog();
+
+            _presenter.LoadUsers();
         }
         private void btnAssignProfile_Click(object sender, EventArgs e){
             if (string.IsNullOrWhiteSpace(SelectedUsername)){

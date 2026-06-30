@@ -21,22 +21,9 @@ namespace GUI.Views
         public frmAssignProfile(string username)
         {
             InitializeComponent();
-            string connectionString =
-       "User Id=SYS;Password=123;Data Source=localhost:1521/FREEPDB1;DBA Privilege=SYSDBA";
-
-            var repo =
-                new UserRepository(connectionString);
-
-            var service =
-                new UserService(repo);
-
-            _presenter =
-                new AssignProfilePresenter(
-                    this,
-                    service);
             _username = username;
-
             txtUsername.Text = username;
+            _presenter = new AssignProfilePresenter(this);
         }
 
         private void frmAssignProfile_Load(object sender, EventArgs e)
