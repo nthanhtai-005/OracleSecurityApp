@@ -44,6 +44,7 @@
             // 
             // txtUsername
             // 
+            txtUsername.CharacterCasing = CharacterCasing.Upper;
             txtUsername.CustomizableEdges = customizableEdges1;
             txtUsername.DefaultText = "";
             txtUsername.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);

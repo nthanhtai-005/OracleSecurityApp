@@ -24,7 +24,7 @@ namespace BLL.Services.Implementations
 
                 if (dtAuth.Rows.Count == 0)
                 {
-                    return false; 
+                    return false;
                 }
 
                 string storedHash = dtAuth.Rows[0]["PASSWORD_HASH"].ToString();
@@ -35,19 +35,19 @@ namespace BLL.Services.Implementations
 
                 if (calculatedHash != storedHash)
                 {
-                    return false; 
+                    return false;
                 }
 
-                string userConnString = DAL.Providers.OracleConnectionManager.BuildDynamicConnectionString(username, rawPassword);
+                string userConnString = OracleConnectionManager.BuildDynamicConnectionString(username, rawPassword);
 
-                // Kết nối vào Oracle bằng tài khoản của User
+                // Kiểm tra kết nối vào Oracle bằng tài khoản của User
                 using (var conn = new Oracle.ManagedDataAccess.Client.OracleConnection(userConnString))
                 {
                     conn.Open();
                 }
 
+                // Thiết lập Session sau khi xác thực thành công
                 SessionContext.ClearSession();
-
                 OracleConnectionManager.CurrentConnectionString = userConnString;
                 SessionContext.CurrentUsername = username;
 
@@ -65,6 +65,5 @@ namespace BLL.Services.Implementations
                 return false;
             }
         }
-
     }
 }
