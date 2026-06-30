@@ -1,4 +1,7 @@
 ﻿using BLL.Security;
+using BLL.Services.Implementations;
+using BLL.Services.Interfaces;
+using DAL.Repositories.Implementations;
 using GUI.Interfaces;
 using System;
 
@@ -7,10 +10,12 @@ namespace GUI.Presenters
     public class MainPresenter
     {
         private readonly IMainView _view;
+        private readonly IAuthService _authService;
 
         public MainPresenter(IMainView view)
         {
             _view = view;
+            _authService = new AuthService(new AuthRepo());
 
             // 1. Lắng nghe sự kiện khi Form Main bắt đầu mở lên
             _view.MainLoad += OnMainLoad;
@@ -26,11 +31,12 @@ namespace GUI.Presenters
         private void OnMainLoad(object sender, EventArgs e)
         {
             ApplyMainSecurity();
+            LoadUserDashboardData();
         }
 
         private void ApplyMainSecurity()
         {
-            // 3. THÊM DÒNG NÀY: Kiểm tra xem có phải là Admin tối cao không
+            // Kiểm tra xem có phải là Admin
             bool isAdmin = SessionContext.CurrentUsername?.ToUpper() == "ADMIN_BM" || SessionContext.HasPrivilege("DBA");
 
             // Nút Quản lý User (Thêm isAdmin vào đầu)
@@ -64,7 +70,29 @@ namespace GUI.Presenters
             // Nút Demo Table
             _view.SetDemoTableMenuVisible(true);
         }
+        private void LoadUserDashboardData()
+        {
+            try
+            {
+                string currentUsername = SessionContext.CurrentUsername;
+                if (string.IsNullOrEmpty(currentUsername)) return;
 
+                var userInfo = _authService.GetUserDashboardInfo(currentUsername);
+                _view.DisplayUserDashboard(userInfo);
+
+                _view.DisplayUserRoles(_authService.GetUserRoles());
+                _view.DisplayUserSystemPrivileges(_authService.GetUserSystemPrivileges());
+                _view.DisplayUserObjectPrivileges(_authService.GetUserObjectPrivileges());
+                _view.DisplayUserQuotas(_authService.GetUserQuotas());
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Lỗi tải thông tin cá nhân:\n" + ex.Message,
+                                             "Thông báo lỗi",
+                                             System.Windows.Forms.MessageBoxButtons.OK,
+                                             System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
         private void OnOpenUserClicked(object sender, EventArgs e) => _view.ShowUserForm();
         private void OnOpenRoleClicked(object sender, EventArgs e) => _view.ShowRoleForm();
         private void OnOpenProfileClicked(object sender, EventArgs e) => _view.ShowProfileForm();

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DTO;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,5 +30,12 @@ namespace GUI.Interfaces
         void ShowProfileForm();
         void ShowGrantForm();
         void ShowDemoForm();
+        void DisplayUserDashboard(UserDashboardModel userInfo);
+
+        // Hiển thị DataGridView
+        void DisplayUserRoles(DataTable data);
+        void DisplayUserSystemPrivileges(DataTable data);
+        void DisplayUserObjectPrivileges(DataTable data);
+        void DisplayUserQuotas(DataTable data);
     }
 }

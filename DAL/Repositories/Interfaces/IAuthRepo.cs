@@ -7,5 +7,11 @@ namespace DAL.Repositories.Interfaces
         DataTable GetAuthInfo(string username);
         DataTable GetSessionPrivileges();
         void UpdateUserPassword(string username, string newHash, string newSalt);
+        DataTable GetAppUserInfo(string username);
+        DataTable GetOracleAccountInfo();
+        DataTable GetUserRoles();
+        DataTable GetUserSystemPrivileges();
+        DataTable GetUserObjectPrivileges();
+        DataTable GetUserQuotas();
     }
 }

@@ -1,9 +1,10 @@
-﻿using System;
-using System.Data;
-using BLL.Security;
+﻿using BLL.Security;
 using BLL.Services.Interfaces;
 using DAL.Providers;
 using DAL.Repositories.Interfaces;
+using DTO;
+using System;
+using System.Data;
 
 namespace BLL.Services.Implementations
 {
@@ -65,5 +66,42 @@ namespace BLL.Services.Implementations
                 return false;
             }
         }
+        public UserDashboardModel GetUserDashboardInfo(string username)
+        {
+            var model = new UserDashboardModel { Username = username };
+
+            // 1. Map dữ liệu từ APP_USERS
+            DataTable dtApp = _authRepo.GetAppUserInfo(username);
+            if (dtApp.Rows.Count > 0)
+            {
+                DataRow row = dtApp.Rows[0];
+                model.FullName = row["FULLNAME"]?.ToString() ?? "N/A";
+                model.Email = row["EMAIL"]?.ToString() ?? "N/A";
+                model.CreatedDate = row["CREATED_DATE"] != DBNull.Value
+                    ? Convert.ToDateTime(row["CREATED_DATE"]).ToString("dd/MM/yyyy")
+                    : "N/A";
+            }
+
+            // 2. Map dữ liệu từ Oracle Dictionary (USER_USERS)
+            DataTable dtOra = _authRepo.GetOracleAccountInfo();
+            if (dtOra.Rows.Count > 0)
+            {
+                DataRow row = dtOra.Rows[0];
+                model.AccountStatus = row["ACCOUNT_STATUS"]?.ToString() ?? "N/A";
+                model.LockDate = row["LOCK_DATE"] != DBNull.Value
+                    ? Convert.ToDateTime(row["LOCK_DATE"]).ToString("dd/MM/yyyy")
+                    : "Không bị khóa";
+                model.Profile = "Bảo mật hệ thống";
+                model.DefaultTablespace = row["DEFAULT_TABLESPACE"]?.ToString() ?? "N/A";
+                model.TemporaryTablespace = row["TEMPORARY_TABLESPACE"]?.ToString() ?? "N/A";
+            }
+
+            return model;
+        }
+
+        public DataTable GetUserRoles() => _authRepo.GetUserRoles();
+        public DataTable GetUserSystemPrivileges() => _authRepo.GetUserSystemPrivileges();
+        public DataTable GetUserObjectPrivileges() => _authRepo.GetUserObjectPrivileges();
+        public DataTable GetUserQuotas() => _authRepo.GetUserQuotas();
     }
 }
