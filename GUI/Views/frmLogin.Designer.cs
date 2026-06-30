@@ -53,13 +53,13 @@
             txtUsername.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
             txtUsername.Font = new Font("Segoe UI", 9F);
             txtUsername.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
-            txtUsername.Location = new Point(72, 72);
-            txtUsername.Margin = new Padding(4, 5, 4, 5);
+            txtUsername.Location = new Point(58, 58);
+            txtUsername.Margin = new Padding(3, 4, 3, 4);
             txtUsername.Name = "txtUsername";
             txtUsername.PlaceholderText = "";
             txtUsername.SelectedText = "";
             txtUsername.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            txtUsername.Size = new Size(358, 75);
+            txtUsername.Size = new Size(286, 60);
             txtUsername.TabIndex = 0;
             // 
             // txtPassword
@@ -73,13 +73,13 @@
             txtPassword.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
             txtPassword.Font = new Font("Segoe UI", 9F);
             txtPassword.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
-            txtPassword.Location = new Point(72, 200);
-            txtPassword.Margin = new Padding(4, 5, 4, 5);
+            txtPassword.Location = new Point(58, 160);
+            txtPassword.Margin = new Padding(3, 4, 3, 4);
             txtPassword.Name = "txtPassword";
             txtPassword.PlaceholderText = "";
             txtPassword.SelectedText = "";
             txtPassword.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            txtPassword.Size = new Size(358, 75);
+            txtPassword.Size = new Size(286, 60);
             txtPassword.TabIndex = 1;
             // 
             // btnLogin
@@ -91,11 +91,10 @@
             btnLogin.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             btnLogin.Font = new Font("Segoe UI", 9F);
             btnLogin.ForeColor = Color.White;
-            btnLogin.Location = new Point(72, 338);
-            btnLogin.Margin = new Padding(4);
+            btnLogin.Location = new Point(58, 270);
             btnLogin.Name = "btnLogin";
             btnLogin.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            btnLogin.Size = new Size(281, 70);
+            btnLogin.Size = new Size(225, 56);
             btnLogin.TabIndex = 2;
             btnLogin.TabStop = false;
             btnLogin.Text = "btnLogin";
@@ -111,25 +110,24 @@
             btnSeedData.FillColor = Color.FromArgb(64, 64, 64);
             btnSeedData.Font = new Font("Segoe UI", 9F);
             btnSeedData.ForeColor = Color.White;
-            btnSeedData.Location = new Point(651, 278);
-            btnSeedData.Margin = new Padding(4);
+            btnSeedData.Location = new Point(521, 222);
             btnSeedData.Name = "btnSeedData";
             btnSeedData.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            btnSeedData.Size = new Size(281, 105);
+            btnSeedData.Size = new Size(151, 50);
             btnSeedData.TabIndex = 3;
-            btnSeedData.Text = "Đừng nhấn cái này cuối hệ thống t mới chính nhấn nó ra lỗi t chửi :)))";
+            btnSeedData.Text = "hihi";
+            btnSeedData.Visible = false;
             btnSeedData.Click += btnSeedData_Click;
             // 
             // frmLogin
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1000, 562);
+            ClientSize = new Size(800, 450);
             Controls.Add(btnSeedData);
             Controls.Add(btnLogin);
             Controls.Add(txtPassword);
             Controls.Add(txtUsername);
-            Margin = new Padding(4);
             Name = "frmLogin";
             Text = "frmLogin";
             Load += frmLogin_Load;
