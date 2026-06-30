@@ -15,6 +15,7 @@ namespace GUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            Application.Run(new frmLogin());
             // 1. Khởi tạo tầng thấp nhất trước (DAL)
             var authRepo = new AuthRepo();
 

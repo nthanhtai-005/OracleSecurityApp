@@ -33,18 +33,23 @@ namespace GUI.Views
         public void GoToMainForm()
         {
             frmMain mainForm = new frmMain();
-            this.Hide();           
-            mainForm.ShowDialog(); 
-            this.Close();          
+            this.Hide();
+            mainForm.ShowDialog();
+            this.Close();
         }
 
         private void btnSeedData_Click(object sender, EventArgs e)
         {
-            
+
         }
         public void SetPresenter(LoginPresenter presenter)
         {
             _presenter = presenter;
+        }
+
+        private void frmLogin_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

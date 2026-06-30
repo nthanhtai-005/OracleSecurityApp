@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace DTO
 {
-    internal class RoleModel
+    public class RoleModel
     {
+        public string RoleName { get; set; }
+        public bool HasPassword { get; set; }
+        public string Password { get; set; }
     }
 }
