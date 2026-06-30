@@ -23,7 +23,7 @@ namespace BLL.Security
             CurrentUsername = null;
             CurrentPrivileges.Clear();
 
-            OracleConnectionManager.CurrentConnectionString = "Data Source=localhost:1521/DB_BAOMAT; User Id=ADMIN_BM; Password=Oracle_1234;";
+            DAL.Providers.OracleConnectionManager.CurrentConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["OracleDefaultConn"].ConnectionString;
         }
     }
 }

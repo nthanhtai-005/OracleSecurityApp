@@ -38,7 +38,7 @@ namespace BLL.Services.Implementations
                     return false; 
                 }
 
-                string userConnString = $"Data Source=localhost:1521/DB_BAOMAT; User Id={username}; Password={rawPassword};";
+                string userConnString = DAL.Providers.OracleConnectionManager.BuildDynamicConnectionString(username, rawPassword);
 
                 // Kết nối vào Oracle bằng tài khoản của User
                 using (var conn = new Oracle.ManagedDataAccess.Client.OracleConnection(userConnString))
