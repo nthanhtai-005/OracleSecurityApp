@@ -1,7 +1,8 @@
-﻿using System.Data;
-using DAL.Providers;
+﻿using DAL.Providers;
 using DAL.Repositories.Interfaces;
 using Oracle.ManagedDataAccess.Client;
+using System.Configuration;
+using System.Data;
 
 namespace DAL.Repositories.Implementations
 {
@@ -75,14 +76,20 @@ namespace DAL.Repositories.Implementations
         public DataTable GetAppUserInfo(string username)
         {
             DataTable dt = new DataTable();
-            using (OracleConnection conn = _connectionManager.GetConnection())
+            string adminConnString = ConfigurationManager.ConnectionStrings["OracleDefaultConn"].ConnectionString;
+            using (OracleConnection conn = new OracleConnection(adminConnString))
             {
                 conn.Open();
                 // Lấy thông tin từ bảng ứng dụng, dùng Parameter chống SQL Injection
-                string sql = "SELECT FULLNAME, EMAIL, CREATED_DATE FROM ADMIN_BM.APP_USERS WHERE USERNAME = UPPER(:username)";
+                string sql = @"
+                                SELECT a.USERNAME, a.FULLNAME, a.EMAIL, a.CREATED_DATE,
+                                d.PROFILE
+                                FROM ADMIN_BM.APP_USERS a
+                                JOIN DBA_USERS d ON a.USERNAME = d.USERNAME
+                                WHERE a.USERNAME = :username";
                 using (OracleCommand cmd = new OracleCommand(sql, conn))
                 {
-                    cmd.Parameters.Add(new OracleParameter("username", username));
+                    cmd.Parameters.Add(new OracleParameter("username", username.ToUpper()));
                     using (OracleDataAdapter da = new OracleDataAdapter(cmd))
                     {
                         da.Fill(dt);
@@ -186,6 +193,37 @@ namespace DAL.Repositories.Implementations
                 }
             }
             return dt;
+        }
+        public bool CheckUserHasGrantablePrivileges()
+        {
+            try
+            {
+                using (OracleConnection conn = _connectionManager.GetConnection())
+                {
+                    conn.Open();
+                    string sql = @"
+                SELECT 1 FROM DUAL WHERE EXISTS (
+                    SELECT 1 FROM USER_ROLE_PRIVS WHERE ADMIN_OPTION = 'YES'
+                    UNION ALL
+                    SELECT 1 FROM USER_SYS_PRIVS WHERE ADMIN_OPTION = 'YES'
+                    UNION ALL
+                    SELECT 1 FROM USER_TAB_PRIVS WHERE GRANTABLE = 'YES'
+                    UNION ALL
+                    SELECT 1 FROM USER_TABLES
+                )";
+
+                    using (OracleCommand cmd = new OracleCommand(sql, conn))
+                    {
+                        object result = cmd.ExecuteScalar();
+                        return result != null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi kiểm tra quyền cấp phát: " + ex.Message);
+                return false;
+            }
         }
     }
 }

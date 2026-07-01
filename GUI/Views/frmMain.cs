@@ -118,6 +118,21 @@ namespace GUI.Views
             }
             dgvUserQuotas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
-
+        public event EventHandler LogoutClicked;
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận",
+                                          MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                // Báo cho Presenter biết người dùng muốn đăng xuất
+                LogoutClicked?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        public void RestartApplication()
+        {
+            Application.Restart();
+            Environment.Exit(0);
+        }
     }
 }

@@ -37,5 +37,7 @@ namespace GUI.Interfaces
         void DisplayUserSystemPrivileges(DataTable data);
         void DisplayUserObjectPrivileges(DataTable data);
         void DisplayUserQuotas(DataTable data);
+        event EventHandler LogoutClicked;
+        void RestartApplication();
     }
 }

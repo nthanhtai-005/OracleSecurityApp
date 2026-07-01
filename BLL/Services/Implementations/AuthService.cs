@@ -5,6 +5,7 @@ using DAL.Repositories.Interfaces;
 using DTO;
 using System;
 using System.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.Services.Implementations
 {
@@ -80,6 +81,7 @@ namespace BLL.Services.Implementations
                 model.CreatedDate = row["CREATED_DATE"] != DBNull.Value
                     ? Convert.ToDateTime(row["CREATED_DATE"]).ToString("dd/MM/yyyy")
                     : "N/A";
+                model.Profile = row["PROFILE"].ToString() ?? "";
             }
 
             // 2. Map dữ liệu từ Oracle Dictionary (USER_USERS)
@@ -91,7 +93,6 @@ namespace BLL.Services.Implementations
                 model.LockDate = row["LOCK_DATE"] != DBNull.Value
                     ? Convert.ToDateTime(row["LOCK_DATE"]).ToString("dd/MM/yyyy")
                     : "Không bị khóa";
-                model.Profile = "Bảo mật hệ thống";
                 model.DefaultTablespace = row["DEFAULT_TABLESPACE"]?.ToString() ?? "N/A";
                 model.TemporaryTablespace = row["TEMPORARY_TABLESPACE"]?.ToString() ?? "N/A";
             }
@@ -103,5 +104,9 @@ namespace BLL.Services.Implementations
         public DataTable GetUserSystemPrivileges() => _authRepo.GetUserSystemPrivileges();
         public DataTable GetUserObjectPrivileges() => _authRepo.GetUserObjectPrivileges();
         public DataTable GetUserQuotas() => _authRepo.GetUserQuotas();
+        public bool HasGrantablePrivileges()
+        {
+            return _authRepo.CheckUserHasGrantablePrivileges();
+        }
     }
 }

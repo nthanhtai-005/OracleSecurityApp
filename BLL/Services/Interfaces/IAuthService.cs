@@ -12,5 +12,6 @@ namespace BLL.Services.Interfaces
         DataTable GetUserSystemPrivileges();
         DataTable GetUserObjectPrivileges();
         DataTable GetUserQuotas();
+        bool HasGrantablePrivileges();
     }
 }

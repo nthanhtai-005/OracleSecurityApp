@@ -25,6 +25,7 @@ namespace GUI.Presenters
             _view.OpenProfileClicked += OnOpenProfileClicked;
             _view.OpenGrantClicked += OnOpenGrantClicked;
             _view.OpenDemoClicked += OnOpenDemoClicked;
+            _view.LogoutClicked += OnLogoutClicked;
         }
 
         // 2. Hàm này sẽ tự động chạy khi Form Main Load xong
@@ -62,9 +63,13 @@ namespace GUI.Presenters
             _view.SetProfileMenuVisible(canOpenProfileForm);
 
             // Nút Gán Quyền (Grant)
+            bool hasGrantable = _authService.HasGrantablePrivileges();
+
             bool canOpenGrantForm = isAdmin ||
                                     SessionContext.HasPrivilege("GRANT ANY ROLE") ||
-                                    SessionContext.HasPrivilege("GRANT ANY PRIVILEGE");
+                                    SessionContext.HasPrivilege("GRANT ANY PRIVILEGE") ||
+                                    hasGrantable; 
+
             _view.SetGrantMenuVisible(canOpenGrantForm);
 
             // Nút Demo Table
@@ -98,5 +103,21 @@ namespace GUI.Presenters
         private void OnOpenProfileClicked(object sender, EventArgs e) => _view.ShowProfileForm();
         private void OnOpenGrantClicked(object sender, EventArgs e) => _view.ShowGrantForm();
         private void OnOpenDemoClicked(object sender, EventArgs e) => _view.ShowDemoForm();
+        private void OnLogoutClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                SessionContext.ClearSession();
+
+                DAL.Providers.OracleConnectionManager.CurrentConnectionString = null;
+
+                _view.RestartApplication();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi khi đăng xuất: " + ex.Message);
+            }
+        }
     }
+
 }

@@ -13,5 +13,6 @@ namespace DAL.Repositories.Interfaces
         DataTable GetUserSystemPrivileges();
         DataTable GetUserObjectPrivileges();
         DataTable GetUserQuotas();
+        bool CheckUserHasGrantablePrivileges();
     }
 }
