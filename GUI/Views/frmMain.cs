@@ -29,6 +29,7 @@ namespace GUI.Views
         public event EventHandler OpenProfileClicked;
         public event EventHandler OpenGrantClicked;
         public event EventHandler OpenDemoClicked;
+        public event EventHandler OpenDataDictionaryClicked;
 
         private void frmMain_Load(object sender, EventArgs e)
         {
@@ -40,6 +41,7 @@ namespace GUI.Views
         private void btnProfile_Click(object sender, EventArgs e) => OpenProfileClicked?.Invoke(this, EventArgs.Empty);
         private void btnGrant_Click(object sender, EventArgs e) => OpenGrantClicked?.Invoke(this, EventArgs.Empty);
         private void btnDemo_Click(object sender, EventArgs e) => OpenDemoClicked?.Invoke(this, EventArgs.Empty);
+        private void btnDataDictionary_Click(object sender, EventArgs e) => OpenDataDictionaryClicked?.Invoke(this, EventArgs.Empty);
 
         // 3. Thực thi các hàm Ẩn/Hiện nút
         public void SetUserMenuVisible(bool isVisible) => btnUser.Visible = isVisible;
@@ -47,6 +49,8 @@ namespace GUI.Views
         public void SetProfileMenuVisible(bool isVisible) => btnProfile.Visible = isVisible;
         public void SetGrantMenuVisible(bool isVisible) => btnGrant.Visible = isVisible;
         public void SetDemoTableMenuVisible(bool isVisible) => btnDemo.Visible = isVisible;
+        public void SetDataDictionaryMenuVisible(bool isVisible) => btnDataDictionary.Visible = isVisible;
+        public void ShowDataDictionaryForm() { new frmDataDictionary().ShowDialog(); }
 
         // 4. Thực thi các lệnh MỞ FORM (Dùng ShowDialog để mở dạng cửa sổ Pop-up)
         public void ShowUserForm() { new frmUser().ShowDialog(); }

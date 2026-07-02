@@ -26,6 +26,7 @@ namespace GUI.Presenters
             _view.OpenGrantClicked += OnOpenGrantClicked;
             _view.OpenDemoClicked += OnOpenDemoClicked;
             _view.LogoutClicked += OnLogoutClicked;
+            _view.OpenDataDictionaryClicked += OnOpenDataDictionaryClicked;
         }
 
         // 2. Hàm này sẽ tự động chạy khi Form Main Load xong
@@ -33,6 +34,9 @@ namespace GUI.Presenters
         {
             ApplyMainSecurity();
             LoadUserDashboardData();
+            string currentUsername = BLL.Security.SessionContext.CurrentUsername;
+            bool isAdmin = currentUsername.Equals("ADMIN_BM", StringComparison.OrdinalIgnoreCase);
+            _view.SetDataDictionaryMenuVisible(isAdmin);
         }
 
         private void ApplyMainSecurity()
@@ -118,6 +122,7 @@ namespace GUI.Presenters
                 Console.WriteLine("Lỗi khi đăng xuất: " + ex.Message);
             }
         }
+        private void OnOpenDataDictionaryClicked(object sender, EventArgs e) => _view.ShowDataDictionaryForm();
     }
 
 }

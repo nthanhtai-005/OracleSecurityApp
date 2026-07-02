@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 
 namespace BLL.Services.Interfaces
 {
-    internal interface IDataDictionaryService
+    public interface IDataDictionaryService
     {
+        DataTable GetPrivilegeTable();
+        DataTable GetRoleTable();
+        DataTable GetProfileTable();
+        DataTable GetUserTable();
     }
 }

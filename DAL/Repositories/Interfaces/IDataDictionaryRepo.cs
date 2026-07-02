@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 
 namespace DAL.Repositories.Interfaces
 {
-    internal interface IDataDictionaryRepo
+    public interface IDataDictionaryRepo
     {
+        DataTable GetPrivilegeManagement();
+        DataTable GetRoleManagement();
+        DataTable GetProfileManagement();
+        DataTable GetUserManagement();
     }
 }

@@ -21,6 +21,7 @@ namespace GUI.Interfaces
         void SetRoleMenuVisible(bool isVisible);
         void SetProfileMenuVisible(bool isVisible);
         void SetGrantMenuVisible(bool isVisible);
+        void SetDataDictionaryMenuVisible(bool isVisible);
 
         // Nút DemoTable có thể luôn hiện, hoặc ẩn tùy logic nhóm
         void SetDemoTableMenuVisible(bool isVisible);
@@ -39,5 +40,7 @@ namespace GUI.Interfaces
         void DisplayUserQuotas(DataTable data);
         event EventHandler LogoutClicked;
         void RestartApplication();
+        event EventHandler OpenDataDictionaryClicked;
+        void ShowDataDictionaryForm();
     }
 }

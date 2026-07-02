@@ -40,6 +40,8 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             btnUser = new Guna.UI2.WinForms.Guna2Button();
             btnRole = new Guna.UI2.WinForms.Guna2Button();
             btnProfile = new Guna.UI2.WinForms.Guna2Button();
@@ -64,6 +66,7 @@
             tabPage4 = new TabPage();
             dgvUserQuotas = new DataGridView();
             btnLogout = new Guna.UI2.WinForms.Guna2Button();
+            btnDataDictionary = new Guna.UI2.WinForms.Guna2Button();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvUserRoles).BeginInit();
@@ -350,11 +353,29 @@
             btnLogout.Text = "Đăng xuất";
             btnLogout.Click += btnLogout_Click;
             // 
+            // btnDataDictionary
+            // 
+            btnDataDictionary.CustomizableEdges = customizableEdges13;
+            btnDataDictionary.DisabledState.BorderColor = Color.DarkGray;
+            btnDataDictionary.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnDataDictionary.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnDataDictionary.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnDataDictionary.Font = new Font("Segoe UI", 9F);
+            btnDataDictionary.ForeColor = Color.White;
+            btnDataDictionary.Location = new Point(56, 439);
+            btnDataDictionary.Name = "btnDataDictionary";
+            btnDataDictionary.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            btnDataDictionary.Size = new Size(225, 56);
+            btnDataDictionary.TabIndex = 16;
+            btnDataDictionary.Text = "btnDataDictionary";
+            btnDataDictionary.Click += btnDataDictionary_Click;
+            // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(990, 596);
+            Controls.Add(btnDataDictionary);
             Controls.Add(btnLogout);
             Controls.Add(tabControl1);
             Controls.Add(lblWelcome);
@@ -413,5 +434,6 @@
         private TabPage tabPage4;
         private DataGridView dgvUserQuotas;
         private Guna.UI2.WinForms.Guna2Button btnLogout;
+        private Guna.UI2.WinForms.Guna2Button btnDataDictionary;
     }
 }
